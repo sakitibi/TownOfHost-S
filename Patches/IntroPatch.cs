@@ -26,8 +26,8 @@ namespace TownOfHost
             {CustomRoles.MadGuardian, lang.MadGuardianInfo},
             {CustomRoles.Mayor, lang.MayorInfo},
             {CustomRoles.Opportunist, lang.OpportunistInfo},
-            {CustomRoles.Snitch, lang.SnitchInfo},
-            {CustomRoles.Sheriff, lang.SheriffInfo},
+            {CustomRoles.Snitch, lang.SnitchInfoIntro},
+            {CustomRoles.Sheriff, lang.SheriffInfoIntro},
             {CustomRoles.BountyHunter, lang.BountyHunterInfo},
             {CustomRoles.Fox, lang.FoxInfo},
             {CustomRoles.Troll, lang.TrollInfo}
