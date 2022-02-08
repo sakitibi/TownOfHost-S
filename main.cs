@@ -763,10 +763,13 @@ namespace TownOfHost
                 {lang.MayorInfo, "自分の票が何倍もの力を持っている"},
                 {lang.OpportunistInfo, "とにかく生き残りましょう"},
                 {lang.SnitchInfo, "タスクを早く済ませよう"},
-                {lang.SheriffInfo, "インポスターを撃ち抜け"},
+                {lang.SheriffInfo, "人外を撃ち抜け"},
                 {lang.BountyHunterInfo, "標的を確実に仕留めよう"},
                 {lang.FoxInfo, "とにかく生き残りましょう"},
                 {lang.TrollInfo, "自爆しよう"},
+                //役職解説(開始画面)
+                {lang.SnitchInfoIntro, "タスクを早く済ませよう"},
+                {lang.SheriffInfoIntro, "<color=#FF1919FF>人外</color>を撃ち抜け"},
                 //役職解説(長)
                 {lang.JesterInfoLong, "ジェスター:\n会議で追放されたときに単独勝利となる第三陣営の役職。追放されずにゲームが終了するか、キルされると敗北となる。"},
                 {lang.MadmateInfoLong, "マッドメイト:\nインポスター陣営に属するが、インポスターが誰なのかはわからない。インポスターからもマッドメイトが誰なのかはわからない。キルやサボタージュは使えないが、通気口を使うことができる。"},
@@ -854,6 +857,9 @@ namespace TownOfHost
                 {lang.BountyHunterInfo, "Hunt your bounty down"},
                 {lang.FoxInfo, "Do whatever it takes to survive"},
                 {lang.TrollInfo, "Die to win"},
+                //役職解説(開始画面)
+                {lang.SnitchInfoIntro, "Finish your tasks to find the <color=#FF1919FF>Impostors</color>"},
+                {lang.SheriffInfoIntro, "Shoot the <color=#FF1919FF>Impostors</color>"},
                 //役職解説(長)
                 {lang.JesterInfoLong, "Jester:\n会議で追放されたときに単独勝利となる第三陣営の役職。追放されずにゲームが終了するか、キルされると敗北となる。"},
                 {lang.MadmateInfoLong, "Madmate:\nインポスター陣営に属するが、Impostorが誰なのかはわからない。ImpostorからもMadmateが誰なのかはわからない。キルやサボタージュは使えないが、通気口を使うことができる。"},
@@ -1002,6 +1008,11 @@ namespace TownOfHost
         BountyHunterInfo,
         FoxInfo,
         TrollInfo,
+
+        //役職解説(開始画面)
+        SnitchInfoIntro,
+        SheriffInfoIntro,
+
         //役職解説(長)
         JesterInfoLong,
         MadmateInfoLong,
