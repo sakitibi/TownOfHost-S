@@ -75,7 +75,6 @@ namespace TownOfHost
                 case CustomRoles.MadGuardian:
                     PlayerControl.LocalPlayer.Data.Role.IntroSound = GetIntroSound(RoleTypes.Impostor);
                     break;
-
                 case CustomRoles.Terrorist:
                     var sound = ShipStatus.Instance.CommonTasks.Where(task => task.TaskType == TaskTypes.FixWiring).FirstOrDefault()
                     .MinigamePrefab.OpenSound;

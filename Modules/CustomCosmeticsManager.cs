@@ -23,8 +23,10 @@ namespace TownOfHost
             foreach(var file in pngFiles) {
                 try {
                     var plate = ScriptableObject.CreateInstance<NamePlateData>();
-                    plate.name = file.Name.Substring(0, file.Name.Length - 5);
-                    plate.ProductId = "TOH_" + file.Name;
+                    string plateName = file.Name.Substring(0, file.Name.Length - 5);
+                    plate.name = plateName;
+                    plate.ProductId = "TOH_" + plateName;
+                    plate.BundleId = plateName;
                     plate.Order = 99;
                     plate.ChipOffset = new Vector2(0f, 0.2f);
                     plate.Free = true;
@@ -37,13 +39,14 @@ namespace TownOfHost
                 }
             }
             Logger.info("プレート読み込み処理終了");
-            isAdded = false;
+            //isAdded = false;
         }
     }
     [HarmonyPatch(typeof(HatManager), nameof(HatManager.GetUnlockedNamePlates))]
     class GetUnlockedNamePlatesPatch {
         public static void Postfix(HatManager __instance, ref Il2CppReferenceArray<NamePlateData> __result) {
             if(CustomNamePlatesManager.isAdded) return;
+            CustomNamePlatesManager.LoadAllPlates();
             var AllPlates = __result.ToList();
             foreach(var plate in CustomNamePlatesManager.CustomPlates) {
                 AllPlates.Add(plate);
@@ -52,6 +55,16 @@ namespace TownOfHost
 
             __result = AllPlates.ToArray();
             CustomNamePlatesManager.isAdded = true;
+        }
+    }
+    [HarmonyPatch(typeof(CosmeticData), nameof(CosmeticData.GetItemName))]
+    class CosmeticItemNamePatch {
+        public static bool Prefix(CosmeticData __instance, ref string __result) {
+            if(__instance.ProductId.StartsWith("TOH")) {
+                __result = __instance.ProductId = __instance.BundleId;
+                return false;
+            }
+            return true;
         }
     }
 }
