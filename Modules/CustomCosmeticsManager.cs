@@ -23,7 +23,7 @@ namespace TownOfHost
             foreach(var file in pngFiles) {
                 try {
                     var plate = ScriptableObject.CreateInstance<NamePlateData>();
-                    string plateName = file.Name.Substring(0, file.Name.Length - 5);
+                    string plateName = file.Name.Substring(0, file.Name.Length - 4);
                     plate.name = plateName;
                     plate.ProductId = "TOH_" + plateName;
                     plate.BundleId = plateName;
