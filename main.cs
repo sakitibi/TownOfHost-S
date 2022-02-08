@@ -969,6 +969,7 @@ namespace TownOfHost
                 {CustomRoles.Troll, "トロール"},
             };
 
+            CustomNamePlatesManager.LoadAllPlates();
             Harmony.PatchAll();
         }
 

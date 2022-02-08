@@ -52,7 +52,6 @@ namespace TownOfHost
             // | P | フリープレイ中 | トイレのドアを一気に開ける |
             // | U | オンライン以外 | 自分の投票をClearする |
             //====================
-
             
             if (Input.GetKeyDown(KeyCode.X) && AmongUsClient.Instance.GameMode == GameModes.FreePlay)
             {
