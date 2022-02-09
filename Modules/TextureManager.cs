@@ -14,9 +14,11 @@ using System.Linq;
 
 namespace TownOfHost
 {
-    class TextureManager {
+    static class TextureManager {
         internal delegate bool LoadImageDelegate(IntPtr tex, IntPtr data, bool markNonReadable);
+        internal delegate Il2CppStructArray<byte> EncodeImageDelegate(IntPtr tex);
         internal static LoadImageDelegate LoadImage;
+        internal static EncodeImageDelegate EncodeImage;
         public static Sprite loadSprite(string path) {
             //画像サイズは150*150
             if(LoadImage == null)
@@ -35,6 +37,19 @@ namespace TownOfHost
                 Logger.error("テクスチャのロードに失敗しました:" + path);
             }
             return null;
+        }
+        public static void SaveTexture(this Texture2D texture, string fileName) {
+            if(EncodeImage == null)
+                EncodeImage = IL2CPP.ResolveICall<EncodeImageDelegate>("UnityEngine.ImageConversion::EncodeToPNG");
+            if(EncodeImage == null) return;
+            try {
+                var png = EncodeImage.Invoke(texture.Pointer);
+                File.WriteAllBytes(fileName, png);
+            }
+            catch {
+                Logger.error("テクスチャの保存に失敗しました:" + fileName);
+            }
+            return;
         }
     }
 }
