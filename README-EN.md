@@ -167,7 +167,7 @@ However, when their tasks becomes low, their name will appear to change from the
 ### Sheriff
 
 Team : Crewmates<br>
-Decision : Crewmate(Only host is the Crewmate)<br>
+Decision : Impostor(Only host is the Crewmate)<br>
 
 They can kill the evildoers.<br>
 However, if they kill the Crewmate, they will die.<br>
