@@ -36,7 +36,7 @@ namespace TownOfHost
         public static ConfigEntry<bool> HideCodes {get; private set;}
         public static ConfigEntry<bool> JapaneseRoleName {get; private set;}
         public static ConfigEntry<bool> AmDebugger {get; private set;}
-        public static bool canUseDebugTools => IsDebugMode || AmongUsClient.Instance?.GameMode == GameModes.FreePlay;
+        public static bool canUseDebugTools => IsDebugMode || (AmongUsClient.Instance?.GameMode == GameModes.FreePlay && AmDebugger.Value);
 
         public static LanguageUnit EnglishLang {get; private set;}
         //Lang-arrangement
