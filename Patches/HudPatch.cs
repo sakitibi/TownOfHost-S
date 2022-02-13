@@ -146,10 +146,12 @@ namespace TownOfHost
             }
 
             if(Input.GetKeyDown(KeyCode.Y) && main.canUseDebugTools)
-            {
+            { //Hacker Map
                 Action<MapBehaviour> tmpAction = (MapBehaviour m) => { 
                     if(!m.IsOpen) {
                         m.ShowNormalMap();
+                        m.infectedOverlay.gameObject.SetActive(true);
+                        m.countOverlay.gameObject.SetActive(false);
                     } else if(m.infectedOverlay.gameObject.active) {
                         //サボタージュモードだった場合
                         //アドミンモードにする
