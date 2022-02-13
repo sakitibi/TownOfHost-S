@@ -36,7 +36,7 @@ namespace TownOfHost
         public static ConfigEntry<bool> HideCodes {get; private set;}
         public static ConfigEntry<bool> JapaneseRoleName {get; private set;}
         public static ConfigEntry<bool> AmDebugger {get; private set;}
-        public static bool canUseDebugTools => IsDebugMode || (AmongUsClient.Instance?.GameMode == GameModes.FreePlay && AmDebugger.Value);
+        public static bool canUseDebugTools => IsDebugMode || AmongUsClient.Instance?.GameMode == GameModes.FreePlay;
 
         public static LanguageUnit EnglishLang {get; private set;}
         //Lang-arrangement
@@ -627,8 +627,6 @@ namespace TownOfHost
             string callerMethodName = callerMethod.Name;
             string callerClassName = callerMethod.DeclaringType.FullName;
             TownOfHost.Logger.info("NotifyRolesが" + callerClassName + "." + callerMethodName + "から呼び出されました");
-            HudManagerPatch.NowCallNotifyRolesCount++;
-            HudManagerPatch.LastSetNameDesyncCount = 0;
 
             //Snitch警告表示のON/OFF
             bool ShowSnitchWarning = false;
@@ -691,7 +689,6 @@ namespace TownOfHost
 
                 //適用
                 seer.RpcSetNamePrivate(SelfName, true);
-                HudManagerPatch.LastSetNameDesyncCount++;
 
                 //他人用の変数定義
                 bool SeerKnowsImpostors = false; //trueの時、インポスターの名前が赤色に見える
@@ -742,7 +739,6 @@ namespace TownOfHost
                     string TargetName = $"{TargetRoleText}{TargetPlayerName}{TargetMark}";
                     //適用
                     target.RpcSetNamePrivate(TargetName, true, seer);
-                    HudManagerPatch.LastSetNameDesyncCount++;
 
                     TownOfHost.Logger.info("NotifyRoles-Loop2-" + target.name + ":END");
                 }

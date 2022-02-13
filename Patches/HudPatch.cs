@@ -9,6 +9,7 @@ using System.IO;
 using UnityEngine;
 using UnhollowerBaseLib;
 using TownOfHost;
+using System.Linq;
 
 namespace TownOfHost
 {
@@ -16,9 +17,6 @@ namespace TownOfHost
     class HudManagerPatch
     {
         public static bool ShowDebugText = false;
-        public static int LastCallNotifyRolesPerSecond = 0;
-        public static int NowCallNotifyRolesCount = 0;
-        public static int LastSetNameDesyncCount = 0;
         public static int LastFPS = 0;
         public static int NowFrameCount = 0;
         public static float FrameRateTimer = 0.0f;
@@ -147,9 +145,22 @@ namespace TownOfHost
                 __instance.GameSettings.fontSizeMax = 1.3f;
             }
 
-            if(Input.GetKeyDown(KeyCode.Y) && AmongUsClient.Instance.GameMode == GameModes.FreePlay)
+            if(Input.GetKeyDown(KeyCode.Y) && main.canUseDebugTools)
             {
-                Action<MapBehaviour> tmpAction = (MapBehaviour m) => { m.ShowSabotageMap(); };
+                Action<MapBehaviour> tmpAction = (MapBehaviour m) => { 
+                    if(!m.IsOpen)
+                    m.ShowNormalMap();
+                    if(m.infectedOverlay.gameObject.active) {
+                        //既にサボタージュ画面だった場合
+                        m.infectedOverlay.gameObject.SetActive(false);
+                        m.countOverlay.gameObject.SetActive(true);
+                    } else {
+                        //まだサボタージュ画面じゃなかった場合
+                        m.infectedOverlay.gameObject.SetActive(true);
+                        m.countOverlay.gameObject.SetActive(false);
+                    }
+                    m.ColorControl.SetColor(Color.yellow);
+                };
                 __instance.ShowMap(tmpAction);
                 if (PlayerControl.LocalPlayer.AmOwner)
                 {
@@ -160,17 +171,13 @@ namespace TownOfHost
             if(Input.GetKeyDown(KeyCode.F3)) ShowDebugText = !ShowDebugText;
             if(ShowDebugText) {
                 string text = "==Debug State==\r\n";
-                text += "Frame Per Second: " + LastFPS + "\r\n";
-                text += "Call Notify Roles Per Second: " + LastCallNotifyRolesPerSecond + "\r\n";
-                text += "Last Set Name Desync Count: " + LastSetNameDesyncCount;
+                text += "Frame Per Second: " + LastFPS;
                 __instance.TaskText.text = text;
             }
             if(FrameRateTimer >= 1.0f) {
                 FrameRateTimer = 0.0f;
                 LastFPS = NowFrameCount;
-                LastCallNotifyRolesPerSecond = NowCallNotifyRolesCount;
                 NowFrameCount = 0;
-                NowCallNotifyRolesCount = 0;
             }
             NowFrameCount++;
             FrameRateTimer += Time.deltaTime;
