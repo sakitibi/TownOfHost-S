@@ -59,7 +59,7 @@ namespace TownOfHost
                 //バウンティハンター用処理
                 var target = PlayerControl.LocalPlayer.getBountyTarget();
                 LowerInfoText.text = target == null ? "null" : main.getLang(lang.BountyCurrentTarget) + ":" + PlayerControl.LocalPlayer.getBountyTarget().name;
-                LowerInfoText.enabled = target != null || main.AmDebugger.Value;
+                LowerInfoText.enabled = target != null || main.canUseDebugTools;
             } else if(PlayerControl.LocalPlayer.isWitch()) {
                 //魔女用処理
                 lang ModeLang = PlayerControl.LocalPlayer.GetKillOrSpell() ? lang.WitchModeSpell : lang.WitchModeKill;

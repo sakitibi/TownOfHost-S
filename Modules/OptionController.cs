@@ -110,6 +110,9 @@ namespace TownOfHost
             //var rmDleks = new PageObject(RandomMapsMode, () => main.getLang(lang.AddedDleks) + ": " + main.getOnOff(main.AddedDleks), true, () => main.AddedDleks = !main.AddedDleks);
             var rmAirship = new PageObject(RandomMapsMode, () => main.getLang(lang.AddedTheAirShip) + ": " + main.getOnOff(main.AddedTheAirShip), true, () => main.AddedTheAirShip = !main.AddedTheAirShip);
             var NoGameEnd = new PageObject(ModeOptions, () => main.getLang(lang.NoGameEnd) + ": " + main.getOnOff(main.NoGameEnd), true, () => main.NoGameEnd = !main.NoGameEnd);
+            if(main.AmDebugger.Value){
+                var DebugMode = new PageObject(ModeOptions, () => "DebugMode" + ": " + main.getOnOff(main.IsDebugMode), true, () => main.IsDebugMode = !main.IsDebugMode);
+            }
             var WhenSkipVote = new PageObject(ModeOptions, () => main.getLang(lang.WhenSkipVote) + ": " + main.whenSkipVote.ToString(), true, () => {
                 var next = main.whenSkipVote + 1;
                 if(next > VoteMode.SelfVote) next = VoteMode.Default;

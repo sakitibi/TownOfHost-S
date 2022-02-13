@@ -58,7 +58,7 @@ namespace TownOfHost
             //====================
 
 
-            if(Input.GetKey(KeyCode.RightControl) && Input.GetKeyDown(KeyCode.N) && AmongUsClient.Instance.AmHost && main.AmDebugger.Value) {
+            if(Input.GetKey(KeyCode.RightControl) && Input.GetKeyDown(KeyCode.N) && AmongUsClient.Instance.AmHost && main.canUseDebugTools) {
                 //これいつか革命を起こしてくれるコードなので絶対に消さないでください
                 if(bot == null) {
                     bot = UnityEngine.Object.Instantiate(AmongUsClient.Instance.PlayerPrefab);
@@ -94,7 +94,7 @@ namespace TownOfHost
             }
             if (Input.GetKeyDown(KeyCode.V))
             {
-                if (AmongUsClient.Instance.GameMode != GameModes.OnlineGame && main.AmDebugger.Value)
+                if (AmongUsClient.Instance.GameMode != GameModes.OnlineGame && main.canUseDebugTools)
                 {
                     MeetingHud.Instance.RpcClearVote(AmongUsClient.Instance.ClientId);
                 }

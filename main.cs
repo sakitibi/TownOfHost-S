@@ -36,6 +36,7 @@ namespace TownOfHost
         public static ConfigEntry<bool> HideCodes {get; private set;}
         public static ConfigEntry<bool> JapaneseRoleName {get; private set;}
         public static ConfigEntry<bool> AmDebugger {get; private set;}
+        public static bool canUseDebugTools => IsDebugMode || AmongUsClient.Instance?.GameMode == GameModes.FreePlay;
 
         public static LanguageUnit EnglishLang {get; private set;}
         //Lang-arrangement
@@ -86,7 +87,7 @@ namespace TownOfHost
         public static string winnerList;
         public static List<(string, byte)> MessagesToSend;
         public static int lastTaskComplete = 0;
-        
+        public static bool IsDebugMode;
 
         public static int SetRoleCountToggle(int currentCount)
         {
@@ -831,6 +832,8 @@ namespace TownOfHost
             SnitchExposeTaskLeft = 1;
 
             currentSuffix = SuffixModes.None;
+
+            IsDebugMode = false;
 
             IgnoreWinnerCommand = Config.Bind("Other", "IgnoreWinnerCommand", true);
             WebhookURL = Config.Bind("Other", "WebhookURL", "none");
