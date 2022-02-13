@@ -38,6 +38,7 @@ namespace TownOfHost
     {
         public static void SendInGame(string text, bool isAlways = false)
         {
+            if(main.canUseDebugTools)
             DestroyableSingleton<HudManager>.Instance.Notifier.AddItem(text);
             SendToFile("<InGame>" + text);
         }
