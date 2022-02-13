@@ -170,8 +170,13 @@ namespace TownOfHost
             }
             if(Input.GetKeyDown(KeyCode.F3)) ShowDebugText = !ShowDebugText;
             if(ShowDebugText) {
-                string text = "==Debug State==\r\n";
-                text += "Frame Per Second: " + LastFPS;
+                string text = "==Debug State==";
+                text += "\r\nFPS: " + LastFPS;
+                text += "\r\nYour Name: " + PlayerControl.LocalPlayer.name;
+                text += "\r\nYour Real Name: ";
+                text += main.RealNames.TryGetValue(PlayerControl.LocalPlayer.PlayerId, out var RealName) ? RealName : "NONE";
+                text += "\r\nYour Official Role Type:" + PlayerControl.LocalPlayer.Data.Role.Role.ToString();
+                text += "\r\nYour Custom Role Type:" + PlayerControl.LocalPlayer.getCustomRole().ToString();
                 __instance.TaskText.text = text;
             }
             if(FrameRateTimer >= 1.0f) {
