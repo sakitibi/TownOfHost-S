@@ -148,14 +148,16 @@ namespace TownOfHost
             if(Input.GetKeyDown(KeyCode.Y) && main.canUseDebugTools)
             {
                 Action<MapBehaviour> tmpAction = (MapBehaviour m) => { 
-                    if(!m.IsOpen)
-                    m.ShowNormalMap();
-                    if(m.infectedOverlay.gameObject.active) {
-                        //既にサボタージュ画面だった場合
+                    if(!m.IsOpen) {
+                        m.ShowNormalMap();
+                    } else if(m.infectedOverlay.gameObject.active) {
+                        //サボタージュモードだった場合
+                        //アドミンモードにする
                         m.infectedOverlay.gameObject.SetActive(false);
                         m.countOverlay.gameObject.SetActive(true);
                     } else {
-                        //まだサボタージュ画面じゃなかった場合
+                        //それ以外の場合
+                        //サボタージュモードにする
                         m.infectedOverlay.gameObject.SetActive(true);
                         m.countOverlay.gameObject.SetActive(false);
                     }
@@ -168,6 +170,17 @@ namespace TownOfHost
                     ConsoleJoystick.SetMode_Task();
                 }
             }
+            if(Input.GetKeyDown(KeyCode.Mouse0) && main.canUseDebugTools) {
+                if(ShipStatus.Instance != null &&
+                MapBehaviour.Instance != null &&
+                MapBehaviour.Instance.IsOpen &&
+                MapBehaviour.Instance.infectedOverlay.gameObject.active == false) {
+                    var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    MapBehaviour.Instance.HerePoint.transform.position = mousePos;
+                    var mapPos = MapBehaviour.Instance.HerePoint.transform.localPosition;
+                    PlayerControl.LocalPlayer.NetTransform.SnapTo(mapPos * ShipStatus.Instance.MapScale);
+                }
+            }
             if(Input.GetKeyDown(KeyCode.F3)) ShowDebugText = !ShowDebugText;
             if(ShowDebugText) {
                 string text = "==Debug State==";
@@ -175,8 +188,9 @@ namespace TownOfHost
                 text += "\r\nYour Name: " + PlayerControl.LocalPlayer.name;
                 text += "\r\nYour Real Name: ";
                 text += main.RealNames.TryGetValue(PlayerControl.LocalPlayer.PlayerId, out var RealName) ? RealName : "NONE";
-                text += "\r\nYour Official Role Type:" + PlayerControl.LocalPlayer.Data.Role.Role.ToString();
-                text += "\r\nYour Custom Role Type:" + PlayerControl.LocalPlayer.getCustomRole().ToString();
+                text += "\r\nYour Official Role Type: " + PlayerControl.LocalPlayer.Data.Role.Role.ToString();
+                text += "\r\nYour Custom Role Type: " + PlayerControl.LocalPlayer.getCustomRole().ToString();
+                text += "\r\nYour Player Position: " + PlayerControl.LocalPlayer.NetTransform.transform.position.x + ", " + PlayerControl.LocalPlayer.NetTransform.transform.position.y;
                 __instance.TaskText.text = text;
             }
             if(FrameRateTimer >= 1.0f) {
