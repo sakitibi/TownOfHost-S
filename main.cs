@@ -828,13 +828,12 @@ namespace TownOfHost
                 main.witchMeeting = false;
             }
     {
-                private static void CustomSyncAllSettings()
-                {
-                    foreach (var pc in PlayerControl.AllPlayerControls)
-                    {
-                        pc.CustomSyncSettings();
-                    }
-                }
+        private static void CustomSyncAllSettings(){
+            foreach (var pc in PlayerControl.AllPlayerControls)
+            {
+                pc.CustomSyncSettings();
+            }
+        }
         public override void Load()
         {
             TextCursorTimer = 0f;
