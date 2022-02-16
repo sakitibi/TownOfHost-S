@@ -491,6 +491,7 @@ namespace TownOfHost
         public static List<PlayerControl> SpelledPlayer = new List<PlayerControl>();
         public static Dictionary<byte, bool> KillOrSpell = new Dictionary<byte, bool>();
         public static bool witchMeeting;
+        public static PlayerControl b_target;
         public static byte ExiledJesterID;
         public static byte WonTerroristID;
         public static byte WonEgoistID;
