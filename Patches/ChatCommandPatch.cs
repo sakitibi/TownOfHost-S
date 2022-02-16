@@ -132,6 +132,17 @@ namespace TownOfHost
                             }
                             break;
 
+                    case "/speed":
+                        if(!AmongUsClient.Instance.AmHost) break;
+                        float speed;
+                        if(float.TryParse(args[1], out speed)) {
+                            PlayerControl.GameOptions.PlayerSpeedMod = speed;
+                            PlayerControl.LocalPlayer.RpcSyncSettings(PlayerControl.GameOptions);
+                        } else {
+                            __instance.AddChat(PlayerControl.LocalPlayer, "不正な引数");
+                        }
+                        break;
+
                     default:
                         break;
                 }
