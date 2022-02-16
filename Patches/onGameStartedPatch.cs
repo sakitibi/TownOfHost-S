@@ -236,7 +236,7 @@ namespace TownOfHost
                 EngineerNum -= main.MadmateCount + main.TerroristCount;
                 roleOpt.SetRoleRate(RoleTypes.Engineer, EngineerNum, roleOpt.GetChancePerGame(RoleTypes.Engineer));
 
-                 int ScientistNum = roleOpt.GetNumPerGame(RoleTypes.Scientist);
+                int ScientistNum = roleOpt.GetNumPerGame(RoleTypes.Scientist);
                 ScientistNum -= main.MadScientistCount;
                 roleOpt.SetRoleRate(RoleTypes.Scientist, ScientistNum, roleOpt.GetChancePerGame(RoleTypes.Scientist));
 
