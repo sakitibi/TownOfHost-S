@@ -830,9 +830,8 @@ namespace TownOfHost
     {
         private static void CustomSyncAllSettings(){
             foreach (var pc in PlayerControl.AllPlayerControls)
-            {
-                pc.CustomSyncSettings();
-            }
+                {
+            pc.CustomSyncSettings();
         }
         public override void Load()
         {
