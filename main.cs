@@ -742,7 +742,6 @@ namespace TownOfHost
                         if (p.isBountyHunter()) tmp += $"\r\n<size=1.5>{main.RealNames[main.b_target.PlayerId]}</size>";
                         if (p.isWitch() && false == false) tmp += $"\r\n<size=1.5>Kill</size>";
                         if (p.isWitch() && true == true) tmp += $"\r\n<size=1.5>Spell</size>";
-                        SelfSuffix = $"<size=1.5>Target:{targetName}</size>";
                     }
                     if (seer.isWitch())
                     {
