@@ -828,8 +828,8 @@ namespace TownOfHost
                 main.witchMeeting = false;
             }
             {
-        public static void CustomSyncAllSettings(){
-            foreach (var pc in PlayerControl.AllPlayerControls){
+        public static void CustomSyncAllSettings() {
+            foreach (var pc in PlayerControl.AllPlayerControls) {
                 pc.CustomSyncSettings();
             }
         }
