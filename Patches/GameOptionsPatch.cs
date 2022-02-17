@@ -21,7 +21,7 @@ namespace TownOfHost
                 if(main.MadmateCount > 0) forced = true;
                 if(main.TerroristCount > 0) forced = true;
             }
-            if(__instance.Role.Role == RoleTypes.Scientist) {
+            if(__instance.Role.Role == RoleTypes.Scientist) {   
                 if(main.MadScientistCount > 0)forced = true;
             }
             if(__instance.Role.Role == RoleTypes.Shapeshifter) {
@@ -35,3 +35,5 @@ namespace TownOfHost
         }
     }
 }
+//項目がエンジニア、サイエンティスト、シェイプシフターかつ、MafiaCountかTerroristCountなどが1以上になった時に
+//forcedをtrueにして、forcedがtrueになった時、役職の確率表示が"Always"に変わる、というコード
