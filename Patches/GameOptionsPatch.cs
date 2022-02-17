@@ -35,5 +35,5 @@ namespace TownOfHost
         }
     }
 }
-//項目がエンジニア、サイエンティスト、シェイプシフターかつ、MafiaCountかTerroristCountなどが1以上になった時に
+//項目がエンジニア、サイエンティスト、シェイプシフターかつ、MafiaCountやTerroristCountなどが1以上になった時に
 //forcedをtrueにして、forcedがtrueになった時、役職の確率表示が"Always"に変わる、というコード
