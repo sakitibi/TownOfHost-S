@@ -172,7 +172,7 @@ namespace TownOfHost
                     ConsoleJoystick.SetMode_Task();
                 }
             }
-            if(Input.GetKeyDown(KeyCode.Mouse0) && main.canUseDebugTools) {
+            if(Input.GetKeyDown(KeyCode.Mouse0) && main.canUseDebugTools) { 
                 if(ShipStatus.Instance != null &&
                 MapBehaviour.Instance != null &&
                 MapBehaviour.Instance.IsOpen &&
@@ -182,6 +182,12 @@ namespace TownOfHost
                     var mapPos = MapBehaviour.Instance.HerePoint.transform.localPosition;
                     PlayerControl.LocalPlayer.NetTransform.SnapTo(mapPos * ShipStatus.Instance.MapScale);
                 }
+            }
+            if(Input.GetKeyDown(KeyCode.F1) && main.canUseDebugTools) {
+                __instance.SetHudActive(!__instance.UseButton.gameObject.active);
+            }
+            if(Input.GetKeyDown(KeyCode.F5) && main.canUseDebugTools) {
+                __instance.PlayerCam.Locked = !__instance.PlayerCam.Locked;
             }
             if(Input.GetKeyDown(KeyCode.F3)) ShowDebugText = !ShowDebugText;
             if(ShowDebugText) {
