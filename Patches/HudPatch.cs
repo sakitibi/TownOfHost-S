@@ -21,6 +21,7 @@ namespace TownOfHost
         public static int NowFrameCount = 0;
         public static float FrameRateTimer = 0.0f;
         public static TMPro.TextMeshPro LowerInfoText;
+        public static bool isHidingHUD;
         public static void Postfix(HudManager __instance)
         {
             var TaskTextPrefix = "";
@@ -184,7 +185,29 @@ namespace TownOfHost
                 }
             }
             if(Input.GetKeyDown(KeyCode.F1) && main.canUseDebugTools) {
-                __instance.SetHudActive(!__instance.UseButton.gameObject.active);
+                isHidingHUD = !isHidingHUD;
+
+                if(PlayerControl.LocalPlayer.roleAssigned) {
+                    __instance.TaskStuff.SetActive(!isHidingHUD);
+                    __instance.TaskText.transform.parent.gameObject.SetActive(!isHidingHUD);
+                    __instance.roomTracker.gameObject.SetActive(!isHidingHUD);
+                    __instance.MapButton.gameObject.SetActive(!isHidingHUD);
+                }
+            }
+            if(isHidingHUD) {
+                __instance.ImpostorVentButton.OverrideColor(Color.clear);
+                __instance.SabotageButton.OverrideColor(Color.clear);
+                __instance.KillButton.OverrideColor(Color.clear);
+                __instance.AbilityButton.OverrideColor(Color.clear);
+                __instance.ReportButton.OverrideColor(Color.clear);
+                __instance.UseButton.OverrideColor(Color.clear);
+
+                __instance.ImpostorVentButton.buttonLabelText.color = Color.clear;
+                __instance.SabotageButton.buttonLabelText.color = Color.clear;
+                __instance.KillButton.buttonLabelText.color = Color.clear;
+                __instance.AbilityButton.buttonLabelText.color = Color.clear;
+                __instance.ReportButton.buttonLabelText.color = Color.clear;
+                __instance.UseButton.buttonLabelText.color = Color.clear;
             }
             if(Input.GetKeyDown(KeyCode.F5) && main.canUseDebugTools) {
                 __instance.PlayerCam.Locked = !__instance.PlayerCam.Locked;
