@@ -195,19 +195,20 @@ namespace TownOfHost
                 }
             }
             if(isHidingHUD) {
-                __instance.ImpostorVentButton.OverrideColor(Color.clear);
-                __instance.SabotageButton.OverrideColor(Color.clear);
-                __instance.KillButton.OverrideColor(Color.clear);
-                __instance.AbilityButton.OverrideColor(Color.clear);
-                __instance.ReportButton.OverrideColor(Color.clear);
-                __instance.UseButton.OverrideColor(Color.clear);
+                var buttons = new List<ActionButton>(){
+                    __instance.ImpostorVentButton,
+                    __instance.SabotageButton,
+                    __instance.KillButton,
+                    __instance.AbilityButton,
+                    __instance.ReportButton,
+                    __instance.UseButton
+                };
 
-                __instance.ImpostorVentButton.buttonLabelText.color = Color.clear;
-                __instance.SabotageButton.buttonLabelText.color = Color.clear;
-                __instance.KillButton.buttonLabelText.color = Color.clear;
-                __instance.AbilityButton.buttonLabelText.color = Color.clear;
-                __instance.ReportButton.buttonLabelText.color = Color.clear;
-                __instance.UseButton.buttonLabelText.color = Color.clear;
+                foreach(var btn in buttons) {
+                    btn.OverrideColor(Color.clear);
+                    btn.buttonLabelText.color = Color.clear;
+                    if(btn.cooldownTimerText != null) btn.cooldownTimerText.text = "";
+                }
             }
             if(Input.GetKeyDown(KeyCode.F5) && main.canUseDebugTools) {
                 __instance.PlayerCam.Locked = !__instance.PlayerCam.Locked;
