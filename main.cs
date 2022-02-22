@@ -733,7 +733,7 @@ namespace TownOfHost
             }
             main.witchMeeting = false;
             sw.Stop();
-            TownOfHost.Logger.SendInGame("NotifyRoles Time: " + sw.ElapsedMilliseconds + "ms");
+            TownOfHost.Logger.info("NotifyRoles Time: " + sw.ElapsedMilliseconds + "ms");
         }
         public static void CustomSyncAllSettings() {
             foreach(var pc in PlayerControl.AllPlayerControls) {
