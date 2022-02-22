@@ -93,12 +93,16 @@ namespace TownOfHost {
             //seer: 上の変更を確認することができるプレイヤー
             if(player == null || name == null || !AmongUsClient.Instance.AmHost) return;
             if(seer == null) seer = player;
+            var sw = new System.Diagnostics.Stopwatch();
+            sw.Start();
             //Logger.info($"{player.name}:{name} => {seer.name}");
             var clientId = seer.getClientId();
             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(player.NetId, (byte)RpcCalls.SetName, Hazel.SendOption.Reliable, clientId);
             writer.Write(name);
             writer.Write(DontShowOnModdedClient);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
+            sw.Stop();
+            Logger.info("SetNamePrivate Time: " + sw.ElapsedMilliseconds + "ms");
         }
         public static void RpcSetRoleDesync(this PlayerControl player, RoleTypes role, PlayerControl seer = null) {
             //player: 名前の変更対象

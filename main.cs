@@ -628,6 +628,8 @@ namespace TownOfHost
         public static void NotifyRoles() {
             if(!AmongUsClient.Instance.AmHost) return;
             if(PlayerControl.AllPlayerControls == null) return;
+            var sw = new System.Diagnostics.Stopwatch();
+            sw.Start();
 
             var caller = new System.Diagnostics.StackFrame(1, false);
             var callerMethod = caller.GetMethod();
@@ -648,7 +650,6 @@ namespace TownOfHost
             //seer:ここで行われた変更を見ることができるプレイヤー
             //target:seerが見ることができる変更の対象となるプレイヤー
             foreach(var seer in PlayerControl.AllPlayerControls) {
-                TownOfHost.Logger.info("NotifyRoles-Loop1-" + seer.name + ":START","NotifyRoles");
                 //Loop1-bottleのSTART-END間でKeyNotFoundException
                 //seerが落ちているときに何もしない
                 if(seer.Data.Disconnected) continue;
@@ -701,7 +702,6 @@ namespace TownOfHost
                 ) foreach(var target in PlayerControl.AllPlayerControls) {
                     //targetがseer自身の場合は何もしない
                     if(target == seer) continue;
-                    TownOfHost.Logger.info("NotifyRoles-Loop2-" + target.name + ":START","NotifyRoles");
                     
                     //他人のタスクはtargetがタスクを持っているかつ、seerが死んでいる場合のみ表示されます。それ以外の場合は空になります。
                     string TargetTaskText = hasTasks(target.Data, false) && seer.Data.IsDead ? $"<color=#ffff00>({main.getTaskText(target.Data.Tasks)})</color>" : "";
@@ -729,12 +729,11 @@ namespace TownOfHost
                     string TargetName = $"{TargetRoleText}{TargetPlayerName}{TargetMark}";
                     //適用
                     target.RpcSetNamePrivate(TargetName, true, seer);
-                    
-                    TownOfHost.Logger.info("NotifyRoles-Loop2-" + target.name + ":END","NotifyRoles");
                 }
-                TownOfHost.Logger.info("NotifyRoles-Loop1-" + seer.name + ":END","NotifyRoles");
             }
             main.witchMeeting = false;
+            sw.Stop();
+            TownOfHost.Logger.SendInGame("NotifyRoles Time: " + sw.ElapsedMilliseconds + "ms");
         }
         public static void CustomSyncAllSettings() {
             foreach(var pc in PlayerControl.AllPlayerControls) {
