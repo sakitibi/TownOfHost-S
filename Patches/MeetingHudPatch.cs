@@ -117,7 +117,7 @@ namespace TownOfHost
 
             }
             catch(Exception ex) {
-                Logger.SendInGame("エラー:" + ex.Message + "\r\nSHIFT+M+ENTERで会議を強制終了してください", true);
+                //Logger.SendInGame("エラー:" + ex.Message + "\r\nSHIFT+M+ENTERで会議を強制終了してください", true);
                 throw;
             }
         }
