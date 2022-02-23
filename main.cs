@@ -734,7 +734,8 @@ namespace TownOfHost
                     
                 }
             }
-            TownOfHost.Logger.info("Time:" + sw.ElapsedMilliseconds + "ms");
+            TownOfHost.Logger.info("NotifyRolesTime:" + sw.ElapsedMilliseconds + "ms");
+            TownOfHost.Logger.info("SetNamePrivateCount:" + HudManagerPatch.LastSetNameDesyncCount);
             main.witchMeeting = false;
         }
         public static void CustomSyncAllSettings() {
