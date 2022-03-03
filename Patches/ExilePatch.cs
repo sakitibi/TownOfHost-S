@@ -56,7 +56,7 @@ namespace TownOfHost
                 {
                     main.CheckTerroristWin(exiled);
                 }
-                main.ps.setDeathReason(exiled.PlayerId,PlayerState.DeathReason.Vote);
+                exiled.getPlayerState().deathReason = PlayerState.DeathReason.Vote;
             }
             if (AmongUsClient.Instance.AmHost && main.isFixedCooldown)
             {
