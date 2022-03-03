@@ -23,7 +23,7 @@ namespace TownOfHost
             main.BitPlayers = new Dictionary<byte, (byte, float)>();
             main.BountyTargets = new Dictionary<byte, PlayerControl>();
 
-            main.ps = new PlayerState();
+            main.PlayerStates = new List<PlayerState>();
 
             main.SpelledPlayer = new List<PlayerControl>();
             main.witchMeeting = false;
@@ -252,6 +252,11 @@ namespace TownOfHost
             }
             main.CustomSyncAllSettings();
             SetColorPatch.IsAntiGlitchDisabled = false;
+
+            //PlayerStatesを設定
+            foreach(var pc in PlayerControl.AllPlayerControls) {
+                main.PlayerStates.Add(new PlayerState(pc));
+            }
 
             Logger.msg("SelectRolesPatch.Postfix.End");
         }

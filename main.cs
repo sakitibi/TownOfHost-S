@@ -49,7 +49,6 @@ namespace TownOfHost
         public static ConfigEntry<string> WebhookURL { get; private set; }
         public static CustomWinner currentWinner;
         public static GameOptionsData RealOptionsData;
-        public static PlayerState ps;
         public static bool IsHideAndSeek;
         public static bool AllowCloseDoors;
         public static bool IgnoreVent;
@@ -60,6 +59,8 @@ namespace TownOfHost
 
         public static Dictionary<byte, CustomRoles> AllPlayerCustomRoles;
         public static Dictionary<string, CustomRoles> lastAllPlayerCustomRoles;
+
+        public static List<PlayerState> PlayerStates;
         public static bool SyncButtonMode;
         public static int SyncedButtonCount;
         public static int UsedButtonCount;
@@ -783,6 +784,7 @@ namespace TownOfHost
             TrollCount = 0;
             FoxCount = 0;
             AllPlayerCustomRoles = new Dictionary<byte, CustomRoles>();
+            PlayerStates = new List<PlayerState>();
 
             SyncButtonMode = false;
             SyncedButtonCount = 10;
