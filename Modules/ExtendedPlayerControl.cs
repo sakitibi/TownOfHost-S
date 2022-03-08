@@ -52,10 +52,15 @@ namespace TownOfHost {
         }
         public static CustomRoles getCustomRole(this GameData.PlayerInfo player)
         {
-            return main.getPlayerById(player.PlayerId).getCustomRole();
+            if(player == null || player.Object == null) return CustomRoles.Default;
+            return player.Object.getCustomRole();
         }
 
         public static CustomRoles getCustomRole(this PlayerControl player) {
+            if(player == null) {
+                Logger.warn("CustomRoleを取得しようとしましたが、対象がnullでした。");
+                return CustomRoles.Default;
+            }
             var cRoleFound = main.AllPlayerCustomRoles.TryGetValue(player.PlayerId, out var cRole);
             if(!cRoleFound)
             {
@@ -129,35 +134,30 @@ namespace TownOfHost {
 
         public static bool canBeKilledBySheriff(this PlayerControl player) {
             var cRole = player.getCustomRole();
-            bool canBeKilled = false;
             switch(cRole) {
                 case CustomRoles.Jester:
-                    canBeKilled = main.SheriffCanKillJester;
-                    break;
+                    return main.SheriffCanKillJester;
                 case CustomRoles.Terrorist:
-                    canBeKilled = main.SheriffCanKillTerrorist;
-                    break;
+                    return main.SheriffCanKillTerrorist;
                 case CustomRoles.Opportunist:
-                    canBeKilled = main.SheriffCanKillOpportunist;
-                    break;
-                case CustomRoles.MadGuardian:
-                case CustomRoles.Madmate:
-                case CustomRoles.Mafia:
-                case CustomRoles.Vampire:
-                case CustomRoles.Shapeshifter:
-                case CustomRoles.Impostor:
-                case CustomRoles.BountyHunter:
-                    canBeKilled = true;
-                    break;
+                    return main.SheriffCanKillOpportunist;
             }
-            return canBeKilled;
+            CustomRoles role = player.getCustomRole();
+            IntroTypes introType = role.GetIntroType();
+            switch(introType) {
+                case IntroTypes.Impostor:
+                    return true;
+                case IntroTypes.Madmate:
+                    return main.SheriffCanKillMadmate;
+            }
+            return false;
         }
 
         public static void SendDM(this PlayerControl target, string text) {
             main.SendMessage(text, target.PlayerId);
         }
 
-        public static void RpcBeKilled(this PlayerControl player, PlayerControl KilledBy = null) {
+        /*public static void RpcBeKilled(this PlayerControl player, PlayerControl KilledBy = null) {
             if(!AmongUsClient.Instance.AmHost) return;
             byte KilledById;
             if(KilledBy == null)
@@ -171,7 +171,7 @@ namespace TownOfHost {
             AmongUsClient.Instance.FinishRpcImmediately(writer);
 
             RPCProcedure.BeKilled(player.PlayerId, KilledById);
-        }
+        }*/
         public static void CustomSyncSettings(this PlayerControl player) {
             if(player == null || !AmongUsClient.Instance.AmHost) return;
             if(main.RealOptionsData == null)
@@ -189,6 +189,7 @@ namespace TownOfHost {
                         opt.KillCooldown *= 2;
                     break;
                 case CustomRoles.Sheriff:
+                    opt.KillCooldown = main.SheriffKillCooldown;
                     opt.ImpostorLightMod = opt.CrewLightMod;
                     var switchSystem = ShipStatus.Instance.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
                     if(switchSystem != null && switchSystem.IsActive) {
@@ -202,6 +203,19 @@ namespace TownOfHost {
                     opt.RoleOptions.EngineerInVentMaxTime = 0;
                     break;
             }
+            CustomRoles role = player.getCustomRole();
+            IntroTypes introType = role.GetIntroType();
+            switch(introType) {
+                case IntroTypes.Madmate:
+                    opt.CrewLightMod = opt.ImpostorLightMod;
+                    var switchSystem = ShipStatus.Instance.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
+                    if(switchSystem != null && switchSystem.IsActive) {
+                        opt.CrewLightMod *= 5;
+                    }
+                    break;
+            }
+            if(player.Data.IsDead && opt.AnonymousVotes)
+                opt.AnonymousVotes = false;
             if(main.SyncButtonMode && main.SyncedButtonCount <= main.UsedButtonCount)
                 opt.EmergencyCooldown = 3600;
             if(main.IsHideAndSeek && main.HideAndSeekKillDelayTimer > 0) {
@@ -212,6 +226,19 @@ namespace TownOfHost {
             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)RpcCalls.SyncSettings, SendOption.Reliable, clientId);
             writer.WriteBytesAndSize(opt.ToBytes(5));
             AmongUsClient.Instance.FinishRpcImmediately(writer);
+        }
+
+        public static TaskState getPlayerTaskState(this PlayerControl player) {
+            if(player == null || player.Data == null || player.Data.Tasks == null) return new TaskState();
+            if(!main.hasTasks(player.Data, false)) return new TaskState();
+            int AllTasksCount = 0;
+            int CompletedTaskCount = 0;
+            foreach(var task in player.Data.Tasks) {
+                AllTasksCount++;
+                if(task.Complete) CompletedTaskCount++;
+            }
+            Logger.info(player.name + ": " + AllTasksCount + ", " + CompletedTaskCount);
+            return new TaskState(AllTasksCount, CompletedTaskCount);
         }
 
         public static GameOptionsData DeepCopy(this GameOptionsData opt) {
@@ -263,6 +290,71 @@ namespace TownOfHost {
                 AmongUsClient.Instance.FinishRpcImmediately(SabotageFixWriter);
             }, 0.4f + delay, "Fix Desync Reactor 2");
         }
+
+        public static string getRealName(this PlayerControl player, bool isMeeting = false) {
+
+            string RealName;
+            if(player.CurrentOutfitType == PlayerOutfitType.Shapeshifted && isMeeting == false) {
+                return player.Data.Outfits[PlayerOutfitType.Shapeshifted].PlayerName;
+            }
+
+            if(!main.RealNames.TryGetValue(player.PlayerId, out RealName)) {
+                RealName = player.name;
+                if(RealName == "Player(Clone)") return RealName;
+                main.RealNames[player.PlayerId] = RealName;
+                TownOfHost.Logger.warn("プレイヤー" + player.PlayerId + "のRealNameが見つからなかったため、" + RealName + "を代入しました");
+            }
+            return RealName;
+        }
+
+        public static PlayerControl getBountyTarget(this PlayerControl player) {
+            if(player == null) return null;
+            if(main.BountyTargets == null) main.BountyTargets = new Dictionary<byte, PlayerControl>();
+            PlayerControl target;
+            if(!main.BountyTargets.TryGetValue(player.PlayerId, out target)) {
+                target = player.ResetBountyTarget();
+            }
+            return target;
+        }
+        public static PlayerControl ResetBountyTarget(this PlayerControl player) {
+            if(!AmongUsClient.Instance.AmHost/* && AmongUsClient.Instance.GameMode != GameModes.FreePlay*/) return null;
+            List<PlayerControl> cTargets = new List<PlayerControl>();
+            foreach(var pc in PlayerControl.AllPlayerControls)
+                if(!pc.Data.IsDead && //死者を除外
+                !pc.Data.Disconnected && //切断者を除外
+                !pc.getCustomRole().isImpostor() //インポスターを除外
+                ) cTargets.Add(pc);
+
+            var rand = new System.Random();
+            if(cTargets.Count <= 0) {
+                Logger.error("バウンティ―ハンターのターゲットの指定に失敗しました:ターゲット候補が存在しません");
+                return null;
+            }
+            var target = cTargets[rand.Next(0, cTargets.Count - 1)];
+            main.BountyTargets[player.PlayerId] = target;
+            Logger.info($"プレイヤー{player.name}のターゲットを{target.name}に変更");
+
+            //RPCによる同期
+            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetBountyTarget, SendOption.Reliable, -1);
+            writer.Write(player.PlayerId);
+            writer.Write(target.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            return target;
+        }
+        public static bool GetKillOrSpell(this PlayerControl player) {
+            bool KillOrSpell;
+            if(!main.KillOrSpell.TryGetValue(player.PlayerId, out KillOrSpell)) {
+                main.KillOrSpell[player.PlayerId] = false;
+                KillOrSpell = false;
+            }
+            return KillOrSpell;
+        }
+        public static void SyncKillOrSpell(this PlayerControl player) {
+            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetKillOrSpell, SendOption.Reliable, -1);
+            writer.Write(player.PlayerId);
+            writer.Write(player.GetKillOrSpell());
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+        }
         public static bool isCrewmate(this PlayerControl target){return target.getCustomRole() == CustomRoles.Default;}
         public static bool isEngineer(this PlayerControl target){return target.getCustomRole() == CustomRoles.Engineer;}
         public static bool isScientist(this PlayerControl target){return target.getCustomRole() == CustomRoles.Scientist;}
@@ -282,5 +374,6 @@ namespace TownOfHost {
         public static bool isSnitch(this PlayerControl target){return target.getCustomRole() == CustomRoles.Snitch;}
         public static bool isSheriff(this PlayerControl target){return target.getCustomRole() == CustomRoles.Sheriff;}
         public static bool isBountyHunter(this PlayerControl target){return target.getCustomRole() == CustomRoles.BountyHunter;}
+        public static bool isWitch(this PlayerControl target){return target.getCustomRole() == CustomRoles.Witch;}
     }
 }

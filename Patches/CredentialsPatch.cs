@@ -35,8 +35,7 @@ namespace TownOfHost
         static void Postfix(PingTracker __instance)
         {
             __instance.text.alignment = TMPro.TextAlignmentOptions.TopRight;
-            __instance.text.text = __instance.text.text + "\r\n<color=" + main.modColor + ">Town Of Host</color> v" + main.PluginVersion + main.VersionSuffix;
-            if(main.PluginVersionType == VersionTypes.Beta) __instance.text.text += "\r\n" + main.BetaName;
+            __instance.text.text += main.credentialsText;
             if (AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started)
             {
                 if (PlayerControl.LocalPlayer.Data.IsDead)
@@ -53,12 +52,24 @@ namespace TownOfHost
     [HarmonyPatch(typeof(VersionShower), nameof(VersionShower.Start))]
     class VersionShowerPatch
     {
+        private static TMPro.TextMeshPro ErrorText;
         static void Postfix(VersionShower __instance)
         {
-            __instance.text.alignment = TMPro.TextAlignmentOptions.TopLeft;
-            __instance.text.text =
-            __instance.text.text + "\r\n<color=" + main.modColor + ">Town Of Host</color> v" + main.PluginVersion + main.VersionSuffix;
-            if(main.PluginVersionType == VersionTypes.Beta) __instance.text.text += "\r\n" + main.BetaName;
+            main.credentialsText = "\r\n<color=" + main.modColor + ">Town Of Host</color> v" + main.PluginVersion + main.VersionSuffix;
+            if(main.PluginVersionType == VersionTypes.Beta) main.credentialsText += $"\r\n{main.BetaName}\r\n{ThisAssembly.Git.Commit}({ThisAssembly.Git.Branch})";
+            var credentials = UnityEngine.Object.Instantiate<TMPro.TextMeshPro>(__instance.text);
+            credentials.text = main.credentialsText;
+            credentials.alignment = TMPro.TextAlignmentOptions.TopRight;
+            credentials.transform.position = new Vector3(4.3f,__instance.transform.localPosition.y+0.3f,0);
+
+            if(main.hasArgumentException && !main.ExceptionMessageIsShown) {
+                main.ExceptionMessageIsShown = true;
+                ErrorText = UnityEngine.Object.Instantiate<TMPro.TextMeshPro>(__instance.text);
+                ErrorText.transform.position = new Vector3(0, 0.20f, 0);
+                ErrorText.alignment = TMPro.TextAlignmentOptions.Center;
+                ErrorText.text = $"エラー:Lang系DictionaryにKeyの重複が発生しています!\r\n{main.ExceptionMessage}";
+                ErrorText.color = Color.red;
+            }
         }
     }
     [HarmonyPatch(typeof(ModManager), nameof(ModManager.LateUpdate))]
@@ -68,6 +79,26 @@ namespace TownOfHost
         {
             __instance.ShowModStamp();
             LateTask.Update(Time.deltaTime);
+        }
+    }
+    
+    [HarmonyPatch(typeof(MainMenuManager), nameof(MainMenuManager.Start))]
+    class LogoPatch
+    {
+        static void Postfix(PingTracker __instance)
+        {
+            var amongUsLogo = GameObject.Find("bannerLogo_AmongUs");
+            if (amongUsLogo != null)
+            {
+                amongUsLogo.transform.localScale *= 0.4f;
+                amongUsLogo.transform.position += Vector3.up * 0.25f;
+            }
+
+            var tohLogo = new GameObject("titleLogo_TOH");
+            tohLogo.transform.position = Vector3.up;
+            tohLogo.transform.localScale *= 1.2f;
+            var renderer = tohLogo.AddComponent<SpriteRenderer>();
+            renderer.sprite = Helpers.LoadSpriteFromResources("TownOfHost.Resources.TownOfHost-Logo.png", 300f);
         }
     }
 }

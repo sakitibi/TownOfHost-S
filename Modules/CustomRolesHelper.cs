@@ -18,14 +18,21 @@ using InnerNet;
 namespace TownOfHost {
     static class CustomRolesHelper {
         public static bool isImpostor(this CustomRoles role) {
+            if(!AmongUsClient.Instance.IsGameStarted && 
+            AmongUsClient.Instance.GameMode != GameModes.FreePlay) return false;
             bool isImpostor =
                 role == CustomRoles.Impostor ||
                 role == CustomRoles.Shapeshifter ||
+                role == CustomRoles.BountyHunter ||
                 role == CustomRoles.Vampire ||
+                role == CustomRoles.BountyHunter ||
+                role == CustomRoles.Witch ||
                 role == CustomRoles.Mafia;
             return isImpostor;
         }
         public static bool isImpostorTeam(this CustomRoles role) {
+            if(!AmongUsClient.Instance.IsGameStarted && 
+            AmongUsClient.Instance.GameMode != GameModes.FreePlay) return false;
             bool isImpostor =
                 role.isImpostor() ||
                 role == CustomRoles.Madmate ||
@@ -55,6 +62,7 @@ namespace TownOfHost {
                 case CustomRoles.Vampire:
                 case CustomRoles.Mafia:
                 case CustomRoles.BountyHunter:
+                case CustomRoles.Witch:
                     type = IntroTypes.Impostor;
                     break;
 
@@ -72,6 +80,9 @@ namespace TownOfHost {
                     break;
             }
             return type;
+        }
+        public static void SetCount(this CustomRoles role, int num) {
+            main.SetRoleCount(role, num);
         }
     }
     public enum IntroTypes {

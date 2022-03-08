@@ -29,6 +29,7 @@ namespace TownOfHost
             {CustomRoles.Snitch, lang.SnitchInfoIntro},
             {CustomRoles.Sheriff, lang.SheriffInfoIntro},
             {CustomRoles.BountyHunter, lang.BountyHunterInfo},
+            {CustomRoles.Witch, lang.WitchInfo},
             {CustomRoles.Fox, lang.FoxInfo},
             {CustomRoles.Troll, lang.TrollInfo}
         };
@@ -38,6 +39,8 @@ namespace TownOfHost
             if(RoleAndInfo.TryGetValue(role, out var info)) __instance.RoleBlurbText.text = main.getLang(info);
             __instance.RoleText.color = main.getRoleColor(role);
             __instance.RoleBlurbText.color = main.getRoleColor(role);
+
+            if(PlayerControl.LocalPlayer.isSheriff()) __instance.YouAreText.color = Palette.CrewmateBlue; //シェリフ専用
         }
     }
     [HarmonyPatch(typeof(IntroCutscene), nameof(IntroCutscene.BeginCrewmate))]
@@ -68,6 +71,7 @@ namespace TownOfHost
                     break;
                 case IntroTypes.Madmate:
                     StartFadeIntro(__instance, Palette.CrewmateBlue, Palette.ImpostorRed);
+                    PlayerControl.LocalPlayer.Data.Role.IntroSound = GetIntroSound(RoleTypes.Impostor);
                     break;
             }
             switch(role) {
@@ -91,6 +95,7 @@ namespace TownOfHost
 
                 case CustomRoles.Sheriff:
                     PlayerControl.LocalPlayer.Data.Role.IntroSound = GetIntroSound(RoleTypes.Crewmate);
+                    __instance.BackgroundBar.material.color = Palette.CrewmateBlue;
                     break;
 
             }
@@ -135,10 +140,19 @@ namespace TownOfHost
     [HarmonyPatch(typeof(IntroCutscene), nameof(IntroCutscene.BeginImpostor))]
     class BeginImpostorPatch
     {
-        public static void Prefix(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam)
+        public static bool Prefix(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam)
         {
-            //TODO:シェリフ時にプレイヤーの間隔とかをクルーの場合と同じにする
+            if(PlayerControl.LocalPlayer.isSheriff()) {
+                //シェリフの場合はキャンセルしてBeginCrewmateに繋ぐ
+                yourTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>();
+                yourTeam.Add(PlayerControl.LocalPlayer);
+                foreach(var pc in PlayerControl.AllPlayerControls) if(!pc.AmOwner)yourTeam.Add(pc);
+                __instance.BeginCrewmate(yourTeam);
+                __instance.overlayHandle.color = Palette.CrewmateBlue;
+                return false;
+            }
             BeginCrewmatePatch.Prefix(__instance, ref yourTeam);
+            return true;
         }
         public static void Postfix(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam)
         {

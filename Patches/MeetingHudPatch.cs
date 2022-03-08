@@ -18,6 +18,9 @@ namespace TownOfHost
     [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.CheckForEndVoting))]
     class CheckForEndVotingPatch {
         public static bool Prefix(MeetingHud __instance) {
+            try {
+            
+            
             if(!AmongUsClient.Instance.AmHost) return true;
             foreach(var ps in __instance.playerStates) {
                 if(!(ps.AmDead || ps.DidVote))//死んでいないプレイヤーが投票していない
@@ -33,13 +36,18 @@ namespace TownOfHost
             List<MeetingHud.VoterState> statesList = new List<MeetingHud.VoterState>();
             for(var i = 0; i < __instance.playerStates.Length; i++) {
                 PlayerVoteArea ps = __instance.playerStates[i];
+                if(ps == null) continue;
                 Logger.info($"{ps.TargetPlayerId}:{ps.VotedFor}");
-                if(ps.VotedFor == 253 && !main.getPlayerById(ps.TargetPlayerId).Data.IsDead)//スキップ
+                var voter = main.getPlayerById(ps.TargetPlayerId);
+                if(voter == null || voter.Data == null || voter.Data.Disconnected) continue;
+                if(ps.VotedFor == 253 && !voter.Data.IsDead)//スキップ
                 {
                     switch (main.whenSkipVote)
                     {
                         case VoteMode.Suicide:
-                            main.getPlayerById(ps.TargetPlayerId).RpcMurderPlayer(main.getPlayerById(ps.TargetPlayerId));
+                            main.ps.setDeathReason(ps.TargetPlayerId,PlayerState.DeathReason.Suicide);
+                            voter.RpcMurderPlayer(voter);
+                            main.IgnoreReportPlayers.Add(voter.PlayerId);
                             break;
                         case VoteMode.SelfVote:
                             ps.VotedFor = ps.TargetPlayerId;
@@ -48,12 +56,14 @@ namespace TownOfHost
                             break;
                     }
                 }
-                if(ps.VotedFor == 254 && !main.getPlayerById(ps.TargetPlayerId).Data.IsDead)//無投票
+                if(ps.VotedFor == 254 && !voter.Data.IsDead)//無投票
                 {
                     switch (main.whenNonVote)
                     {
                         case VoteMode.Suicide:
-                            main.getPlayerById(ps.TargetPlayerId).RpcMurderPlayer(main.getPlayerById(ps.TargetPlayerId));
+                            main.ps.setDeathReason(ps.TargetPlayerId,PlayerState.DeathReason.Suicide);
+                            voter.RpcMurderPlayer(voter);
+                            main.IgnoreReportPlayers.Add(voter.PlayerId);
                             break;
                         case VoteMode.SelfVote:
                             ps.VotedFor = ps.TargetPlayerId;
@@ -103,9 +113,16 @@ namespace TownOfHost
 
             //霊界用暗転バグ対処
             foreach(var pc in PlayerControl.AllPlayerControls)
-                if(pc.isSheriff() && pc.Data.IsDead) pc.ResetPlayerCam(17.5f);
+                if(pc.isSheriff() && (pc.Data.IsDead || pc.PlayerId == exiledPlayer?.PlayerId)) pc.ResetPlayerCam(19f);
             
             return false;
+
+
+            }
+            catch(Exception ex) {
+                Logger.SendInGame("エラー:" + ex.Message + "\r\nSHIFT+M+ENTERで会議を強制終了してください", true);
+                throw;
+            }
         }
         public static bool isMayor(byte id) {
             var player = PlayerControl.AllPlayerControls.ToArray().Where(pc => pc.PlayerId == id).FirstOrDefault();
@@ -116,10 +133,12 @@ namespace TownOfHost
 
     static class ExtendedMeetingHud {
         public static Dictionary<byte, int> CustomCalculateVotes(this MeetingHud __instance) {
+            Logger.info("CustomCalculateVotes開始");
             Dictionary<byte, int> dic = new Dictionary<byte, int>();
             //| 投票された人 | 投票された回数 |
             for(int i = 0; i < __instance.playerStates.Length; i++) {
                 PlayerVoteArea ps = __instance.playerStates[i];
+                if(ps == null) continue;
                 if(ps.VotedFor != (byte) 252 && ps.VotedFor != byte.MaxValue && ps.VotedFor != (byte) 254) {
                     int num;
                     int VoteNum = 1;
@@ -136,7 +155,9 @@ namespace TownOfHost
     {
         public static void Prefix(MeetingHud __instance)
         {
-            main.NotifyRoles();
+            main.witchMeeting = true;
+            main.NotifyRoles(isMeeting:true);
+            main.witchMeeting = false;
         }
         public static void Postfix(MeetingHud __instance)
         {
@@ -156,6 +177,53 @@ namespace TownOfHost
                 main.SendToAll("緊急会議ボタンはあと" + (main.SyncedButtonCount - main.UsedButtonCount) + "回使用可能です。");
                 Logger.SendToFile("緊急会議ボタンはあと" + (main.SyncedButtonCount - main.UsedButtonCount) + "回使用可能です。", LogLevel.Message);
             }
+
+            if (AmongUsClient.Instance.AmHost)
+            {
+                _ = new LateTask(() =>
+                {
+                    foreach (var pc in PlayerControl.AllPlayerControls)
+                    {
+                        pc.RpcSetName(pc.getRealName(isMeeting: true));
+                    }
+                }, 3f, "SetName To Chat");
+            }
+
+            foreach(var pva in __instance.playerStates) {
+                if(pva == null) continue;
+                PlayerControl pc = main.getPlayerById(pva.TargetPlayerId);
+                if(pc == null) continue;
+
+                //会議画面での名前変更
+                //とりあえずSnitchは会議中にもインポスターを確認することができる仕様にしていますが、変更する可能性があります。
+                //変更する場合でも、このコードはMadSnitchで使うと思うので消さないでください。
+
+                //インポスター表示
+                bool LocalPlayerKnowsImpostor = false; //203行目のif文で使う trueの時にインポスターの名前を赤くする
+                if(PlayerControl.LocalPlayer.isSnitch() && //LocalPlayerがSnitch
+                PlayerControl.LocalPlayer.getPlayerTaskState().isTaskFinished) //LocalPlayerがタスクを終えている
+                    LocalPlayerKnowsImpostor = true;
+                
+                if(LocalPlayerKnowsImpostor) {
+                    if(pc != null && pc.getCustomRole().isImpostor()) //変更先がインポスター
+                        //変更対象の名前を赤くする
+                        pva.NameText.text = "<color=#ff0000>" + pva.NameText.text + "</color>";
+                }
+
+                if(PlayerControl.LocalPlayer.getCustomRole().isImpostor() && //LocalPlayerがImpostor
+                pc.isSnitch() && //変更対象がSnitch
+                pc.getPlayerTaskState().doExpose //変更対象のタスクが終わりそう
+                ) {
+                    //変更対象にSnitchマークをつける
+                    pva.NameText.text += $"<color={main.getRoleColorCode(CustomRoles.Snitch)}>★</color>";
+                }
+
+                //会議画面ではインポスター自身の名前にSnitchマークはつけません。
+
+                //自分自身の名前の色を変更
+                if(pc != null && pc.AmOwner && AmongUsClient.Instance.IsGameStarted) //変更先が自分自身
+                    pva.NameText.text  = $"<color={PlayerControl.LocalPlayer.getRoleColorCode()}>{pva.NameText.text}</color>"; //名前の色を変更
+            }
         }
     }
     [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Update))]
@@ -163,18 +231,19 @@ namespace TownOfHost
     {
         public static void Postfix(MeetingHud __instance)
         {
-            if(AmongUsClient.Instance.GameMode == GameModes.FreePlay || !AmongUsClient.Instance.AmHost) return;
+            if(AmongUsClient.Instance.GameMode == GameModes.FreePlay) return;
             foreach (var pva in __instance.playerStates)
             {
+                if(pva == null) continue;
+                PlayerControl pc = main.getPlayerById(pva.TargetPlayerId);
+                if(pc == null) continue;
+
+                //役職表示系
                 var RoleTextMeetingTransform = pva.NameText.transform.Find("RoleTextMeeting");
                 TMPro.TextMeshPro RoleTextMeeting = null;
                 if(RoleTextMeetingTransform != null) RoleTextMeeting = RoleTextMeetingTransform.GetComponent<TMPro.TextMeshPro>();
                 if (RoleTextMeeting != null)
                 {
-                    var pc = PlayerControl.AllPlayerControls.ToArray()
-                        .Where(pc => pc.PlayerId == pva.TargetPlayerId)
-                        .FirstOrDefault();
-                    if (pc == null) return;
 
                     var RoleTextData = main.GetRoleText(pc);
                     RoleTextMeeting.text = RoleTextData.Item1;

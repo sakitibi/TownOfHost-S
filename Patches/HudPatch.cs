@@ -15,6 +15,14 @@ namespace TownOfHost
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
     class HudManagerPatch
     {
+        public static bool ShowDebugText = false;
+        public static int LastCallNotifyRolesPerSecond = 0;
+        public static int NowCallNotifyRolesCount = 0;
+        public static int LastSetNameDesyncCount = 0;
+        public static int LastFPS = 0;
+        public static int NowFrameCount = 0;
+        public static float FrameRateTimer = 0.0f;
+        public static TMPro.TextMeshPro LowerInfoText;
         public static void Postfix(HudManager __instance)
         {
             var TaskTextPrefix = "";
@@ -34,6 +42,37 @@ namespace TownOfHost
                     PlayerControl.LocalPlayer.Collider.offset = new Vector2(0f,-0.3636f);
                 }
             }
+            //バウンティハンターのターゲットテキスト
+            if(LowerInfoText == null) {
+                LowerInfoText = UnityEngine.Object.Instantiate(__instance.KillButton.buttonLabelText);
+                LowerInfoText.transform.parent = __instance.transform;
+                LowerInfoText.transform.localPosition = new Vector3(0, -2f, 0);
+                LowerInfoText.alignment = TMPro.TextAlignmentOptions.Center;
+                LowerInfoText.overflowMode = TMPro.TextOverflowModes.Overflow;
+                LowerInfoText.enableWordWrapping = false;
+                LowerInfoText.color = Palette.EnabledColor;
+                LowerInfoText.fontSizeMin = 2.0f;
+                LowerInfoText.fontSizeMax = 2.0f;
+            }
+
+            if(PlayerControl.LocalPlayer.isBountyHunter()) {//else使いたいのでここはif文
+                //バウンティハンター用処理
+                var target = PlayerControl.LocalPlayer.getBountyTarget();
+                LowerInfoText.text = target == null ? "null" : main.getLang(lang.BountyCurrentTarget) + ":" + PlayerControl.LocalPlayer.getBountyTarget().name;
+                LowerInfoText.enabled = target != null || main.AmDebugger.Value;
+            } else if(PlayerControl.LocalPlayer.isWitch()) {
+                //魔女用処理
+                lang ModeLang = PlayerControl.LocalPlayer.GetKillOrSpell() ? lang.WitchModeSpell : lang.WitchModeKill;
+                LowerInfoText.text = main.getLang(lang.WitchCurrentMode) + ":" + main.getLang(ModeLang);
+                LowerInfoText.enabled = true;
+            } else {
+                //バウンティハンターじゃない
+                LowerInfoText.enabled = false;
+            }
+            if(!AmongUsClient.Instance.IsGameStarted && AmongUsClient.Instance.GameMode != GameModes.FreePlay)
+                LowerInfoText.enabled = false;
+
+
             switch(PlayerControl.LocalPlayer.getCustomRole())
             {
                 case CustomRoles.Madmate:
@@ -41,7 +80,7 @@ namespace TownOfHost
                     TaskTextPrefix += FakeTasksText;
                     break;
                 case CustomRoles.MadGuardian:
-                    TaskTextPrefix = $"<color={main.getRoleColorCode(CustomRoles.MadGuardian)}>{main.getRoleName(CustomRoles.Madmate)}</color>\r\n<color={main.getRoleColorCode(CustomRoles.MadGuardian)}>{main.getLang(lang.MadGuardianInfo)}</color>\r\n";
+                    TaskTextPrefix = $"<color={main.getRoleColorCode(CustomRoles.MadGuardian)}>{main.getRoleName(CustomRoles.MadGuardian)}</color>\r\n<color={main.getRoleColorCode(CustomRoles.MadGuardian)}>{main.getLang(lang.MadGuardianInfo)}</color>\r\n";
                     TaskTextPrefix += FakeTasksText;
                     break;
                 case CustomRoles.Jester:
@@ -81,14 +120,16 @@ namespace TownOfHost
                     TaskTextPrefix = $"<color={main.getRoleColorCode(CustomRoles.Snitch)}>{main.getRoleName(CustomRoles.Snitch)}</color>\r\n<color={main.getRoleColorCode(CustomRoles.Snitch)}>{main.getLang(lang.SnitchInfo)}</color>\r\n";
                     break;
                 case CustomRoles.Sheriff:
-                    TaskTextPrefix = "<color=#ffff00>" + main.getRoleName(CustomRoles.Sheriff) + "</color>\r\n" +
-                    "<color=#ffff00>" + main.getLang(lang.SheriffInfo) + "</color>\r\n";
+                    TaskTextPrefix = $"<color={main.getRoleColorCode(CustomRoles.Sheriff)}>{main.getRoleName(CustomRoles.Sheriff)}\r\n{main.getLang(lang.SheriffInfo)}</color>\r\n";
                     if(PlayerControl.LocalPlayer.Data.Role.Role != RoleTypes.GuardianAngel) {
                         PlayerControl.LocalPlayer.Data.Role.CanUseKillButton = true;
                     }
                     break;
                 case CustomRoles.BountyHunter:
                     TaskTextPrefix = $"<color={main.getRoleColorCode(CustomRoles.BountyHunter)}>{main.getRoleName(CustomRoles.BountyHunter)}</color>\r\n<color={main.getRoleColorCode(CustomRoles.BountyHunter)}>{main.getLang(lang.BountyHunterInfo)}</color>\r\n";
+                    break;
+                case CustomRoles.Witch:
+                    TaskTextPrefix = $"<color={main.getRoleColorCode(CustomRoles.Witch)}>{main.getRoleName(CustomRoles.Witch)}</color>\r\n<color={main.getRoleColorCode(CustomRoles.Witch)}>{main.getLang(lang.WitchInfo)}</color>\r\n";
                     break;
             }
 
@@ -115,6 +156,23 @@ namespace TownOfHost
                     ConsoleJoystick.SetMode_Task();
                 }
             }
+            if(Input.GetKeyDown(KeyCode.F3)) ShowDebugText = !ShowDebugText;
+            if(ShowDebugText) {
+                string text = "==Debug State==\r\n";
+                text += "Frame Per Second: " + LastFPS + "\r\n";
+                text += "Call Notify Roles Per Second: " + LastCallNotifyRolesPerSecond + "\r\n";
+                text += "Last Set Name Desync Count: " + LastSetNameDesyncCount;
+                __instance.TaskText.text = text;
+            }
+            if(FrameRateTimer >= 1.0f) {
+                FrameRateTimer = 0.0f;
+                LastFPS = NowFrameCount;
+                LastCallNotifyRolesPerSecond = NowCallNotifyRolesCount;
+                NowFrameCount = 0;
+                NowCallNotifyRolesCount = 0;
+            }
+            NowFrameCount++;
+            FrameRateTimer += Time.deltaTime;
 
             if(AmongUsClient.Instance.GameMode == GameModes.OnlineGame) RepairSender.enabled = false;
             if(Input.GetKeyDown(KeyCode.RightShift) && AmongUsClient.Instance.GameMode != GameModes.OnlineGame)
@@ -164,6 +222,7 @@ namespace TownOfHost
                     __instance.KillButton.ToggleVisible(isActive && !PlayerControl.LocalPlayer.Data.IsDead);
                     __instance.SabotageButton.ToggleVisible(false);
                     __instance.ImpostorVentButton.ToggleVisible(false);
+                    __instance.AbilityButton.ToggleVisible(false);
                     break;
             }
         }

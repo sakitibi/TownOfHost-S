@@ -35,7 +35,15 @@ namespace TownOfHost
         }
         static void WrapUpPostfix(GameData.PlayerInfo exiled)
         {
-            //Debug Message
+            main.witchMeeting = false;
+            if(!AmongUsClient.Instance.AmHost) return; //ホスト以外はこれ以降の処理を実行しません
+            main.SpelledPlayer.RemoveAll(pc => pc == null || pc.Data == null || pc.Data.IsDead || pc.Data.Disconnected);
+            foreach(var p in main.SpelledPlayer)
+            {
+                main.ps.setDeathReason(p.PlayerId, PlayerState.DeathReason.Spell);
+                main.IgnoreReportPlayers.Add(p.PlayerId);
+                p.RpcMurderPlayer(p);
+            }
             if (exiled != null)
             {
                 var role = exiled.getCustomRole();
@@ -50,6 +58,7 @@ namespace TownOfHost
                 {
                     main.CheckTerroristWin(exiled);
                 }
+                main.ps.setDeathReason(exiled.PlayerId,PlayerState.DeathReason.Vote);
             }
             if (AmongUsClient.Instance.AmHost && main.isFixedCooldown)
             {

@@ -17,59 +17,13 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace TownOfHost
-{//参考:https://github.com/NuclearPowered/Reactor/blob/master/Reactor.Debugger/Patches.cs
+{
     [HarmonyPatch(typeof(GameStartManager), nameof(GameStartManager.Update))]
     public static class GameStartManagerUpdatePatch
     {
         public static void Prefix(GameStartManager __instance)
         {
             __instance.MinPlayers = 1;
-        }
-    }
-
-    [HarmonyPatch(typeof(GameSettingMenu), nameof(GameSettingMenu.Start))]
-    public static class GameSettingMenuPatch
-    {
-        public static void Prefix(GameSettingMenu __instance)
-        {
-            // Unlocks map/impostor amount changing in online (for testing on your custom servers)
-            // オンラインモードで部屋を立て直さなくてもマップを変更できるように変更
-            __instance.HideForOnline = new Il2CppReferenceArray<Transform>(0);
-        }
-    }
-
-    [HarmonyPatch(typeof(GameOptionsMenu), nameof(GameOptionsMenu.Start))]
-    [HarmonyPriority(Priority.First)]
-    public static class GameOptionsMenuPatch
-    {
-        public static void Postfix(GameOptionsMenu __instance)
-        {
-            foreach (var ob in __instance.Children)
-            {
-                if (ob.Title == StringNames.GameShortTasks ||
-                ob.Title == StringNames.GameLongTasks ||
-                ob.Title == StringNames.GameCommonTasks)
-                {
-                    ob.Cast<NumberOption>().ValidRange = new FloatRange(0, 99);
-                }
-                if (ob.Title == StringNames.GameKillCooldown)
-                {
-                    ob.Cast<NumberOption>().ValidRange = new FloatRange(0, 180);
-                }
-                if(ob.Title == StringNames.GameRecommendedSettings) {
-                    ob.enabled = false;
-                    ob.gameObject.SetActive(false);
-                }
-            }
-        }
-    }
-    [HarmonyPatch(typeof(GameOptionsData), nameof(GameOptionsData.GetAdjustedNumImpostors))]
-    class UnrestrictNumImpostorsPatch
-    {
-        public static bool Prefix(ref int __result)
-        {
-            __result = PlayerControl.GameOptions.NumImpostors;
-            return false;
         }
     }
     //タイマーとコード隠し
@@ -85,6 +39,22 @@ namespace TownOfHost
                 // Reset lobby countdown timer
                 timer = 600f;
                 lobbyCodehide = $"<color={main.modColor}>Town Of Host</color>";
+
+                // Make Public Button
+                if(main.PluginVersionType == VersionTypes.Beta) {
+                    __instance.MakePublicButton.color = Palette.DisabledClear;
+                    __instance.privatePublicText.color = Palette.DisabledClear;
+                }
+
+                if (AmongUsClient.Instance.AmHost && main.autoDisplayLastRoles && main.AllPlayerCustomRoles.Count != 0)
+                {
+                    new LateTask(() =>
+                    {
+                        main.isChatCommand = true;
+                        main.ShowLastRoles();
+                    }
+                        , 5f, "DisplayLastRoles");
+                }
             }
         }
 
@@ -154,5 +124,14 @@ namespace TownOfHost
             }
             return continueStart;
         }
-    } 
+    }
+    [HarmonyPatch(typeof(GameOptionsData), nameof(GameOptionsData.GetAdjustedNumImpostors))]
+    class UnrestrictNumImpostorsPatch
+    {
+        public static bool Prefix(ref int __result)
+        {
+            __result = PlayerControl.GameOptions.NumImpostors;
+            return false;
+        }
+    }
 }
