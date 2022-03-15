@@ -79,6 +79,8 @@ namespace TownOfHost
         public static bool BountyMeetingCheck;
         public static bool isBountyKillSuccess;
         public static bool BountyTimerCheck;
+        public static int FireWorksCount;
+        public static Vector3 FireWorksPosition;
         public static Dictionary<byte, bool> CheckShapeshift = new Dictionary<byte, bool>();
         public static byte ExiledJesterID;
         public static byte WonTerroristID;
@@ -162,6 +164,7 @@ namespace TownOfHost
                 {CustomRoles.Warlock, "#ff0000"},
                 {CustomRoles.SerialKiller, "#ff0000"},
                 {CustomRoles.Lighter, "#eee5be"},
+                {CustomRoles.FireWorks, "#ff0000"},
                 {CustomRoles.Fox, "#e478ff"},
                 {CustomRoles.Troll, "#00ff00"}
             };
@@ -219,6 +222,7 @@ namespace TownOfHost
         Warlock,
         SerialKiller,
         Lighter,
+        FireWorks,
         Fox,
         Troll
     }
