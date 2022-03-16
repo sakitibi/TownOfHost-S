@@ -472,6 +472,7 @@ namespace TownOfHost
                     }
                 }
 
+                //停電が鳴った時、ライターをしゅー視点見れる
                 /*if(main.AmDebugger.Value && main.BlockKilling.TryGetValue(__instance.PlayerId, out var isBlocked)) {
                     Mark = isBlocked ? "(true)" : "(false)";
                 }*/
