@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿
+using System.Text.RegularExpressions;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.IL2CPP;
@@ -161,6 +162,7 @@ namespace TownOfHost
                 {CustomRoles.Warlock, "#ff0000"},
                 {CustomRoles.SerialKiller, "#ff0000"},
                 {CustomRoles.Syuー, "#ff0000"},
+                {CustomRoles.Lighter, "#eee5be"},
                 {CustomRoles.Fox, "#e478ff"},
                 {CustomRoles.Troll, "#00ff00"}
             };
@@ -218,6 +220,7 @@ namespace TownOfHost
         Warlock,
         SerialKiller,
         Syuー,
+        Lighter,
         Fox,
         Troll
     }

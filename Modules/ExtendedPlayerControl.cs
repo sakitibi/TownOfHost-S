@@ -246,6 +246,21 @@ namespace TownOfHost {
                         opt.ImpostorLightMod /= 5;
                     }
                     goto DefaultKillcooldown;
+                case CustomRoles.Lighter:
+                    if(player.getPlayerTaskState().isTaskFinished){
+                        opt.CrewLightMod = opt.ImpostorLightMod;
+                        var li = ShipStatus.Instance.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
+                        if(li != null && li.IsActive) {
+                            opt.CrewLightMod *= 5;
+                        }
+                    }
+                    break;
+                case CustomRoles.Syuー:
+                var sy = ShipStatus.Instance.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
+                        if(sy != null && sy.IsActive) {
+                            opt.PlayerSpeedMod = 2;
+                        }
+                        goto DefaultKillcooldown;
 
 
                 InfinityVent:
@@ -458,5 +473,7 @@ namespace TownOfHost {
         public static bool isShapeMaster(this PlayerControl target){return target.getCustomRole() == CustomRoles.ShapeMaster;}
         public static bool isWarlock(this PlayerControl target){return target.getCustomRole() == CustomRoles.Warlock;}
         public static bool isSerialKiller(this PlayerControl target){return target.getCustomRole() == CustomRoles.SerialKiller;}
+        public static bool isSyuー(this PlayerControl target){return target.getCustomRole() == CustomRoles.Syuー;}
+        public static bool isLighter(this PlayerControl target){return target.getCustomRole() == CustomRoles.Lighter;}
     }
 }

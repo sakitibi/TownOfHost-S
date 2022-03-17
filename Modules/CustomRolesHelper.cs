@@ -38,6 +38,51 @@ namespace TownOfHost {
                 role == CustomRoles.Impostor ||
                 role == CustomRoles.Shapeshifter;
         }
+        public static bool isSyuー(this CustomRoles role) {
+            return
+                role == CustomRoles.Syuー;
+        }
+        public static bool isCrewmate(this CustomRoles role) {
+            return
+                role ==CustomRoles.Bait ||
+                role ==CustomRoles.Mayor ||
+                role ==CustomRoles.SabotageMaster ||
+                role ==CustomRoles.Sheriff ||
+                role ==CustomRoles.Snitch;
+                
+        }
+        public static bool isPlayer(this CustomRoles role) {
+            return
+                role == CustomRoles.Impostor ||
+                role == CustomRoles.Shapeshifter ||
+                role == CustomRoles.BountyHunter ||
+                role == CustomRoles.Vampire ||
+                role == CustomRoles.Witch ||
+                role == CustomRoles.ShapeMaster ||
+                role == CustomRoles.Warlock ||
+                role == CustomRoles.SerialKiller ||
+                role == CustomRoles.Mafia ||
+                role == CustomRoles.Madmate ||
+                role == CustomRoles.SKMadmate ||
+                role == CustomRoles.MadGuardian ||
+                role == CustomRoles.MadSnitch ||
+                role == CustomRoles.Jester ||
+                role == CustomRoles.Opportunist ||
+                role == CustomRoles.Terrorist ||
+                role == CustomRoles.Troll ||
+                role == CustomRoles.Fox ||
+                role == CustomRoles.Crewmate ||
+                role == CustomRoles.Engineer ||
+                role == CustomRoles.Scientist ||
+                role == CustomRoles.GuardianAngel ||
+                role == CustomRoles.Impostor ||
+                role ==CustomRoles.Bait ||
+                role ==CustomRoles.Mayor ||
+                role ==CustomRoles.SabotageMaster ||
+                role ==CustomRoles.Sheriff ||
+                role ==CustomRoles.Snitch;
+        }
+
         public static bool CanUseKillButton(this CustomRoles role) {
             bool canUse =
                 role.isImpostor() ||
