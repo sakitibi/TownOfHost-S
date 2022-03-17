@@ -83,13 +83,13 @@ namespace TownOfHost
                     }
                 }
             }
-            else if (__instance.isBomber() && !main.CheckShapeshift[__instance.PlayerId])
+            else if (__instance.isFireWorks() && !main.CheckShapeshift[__instance.PlayerId])
             {
-                if (!main.BomberFire)
+                if (main.FireWorksCount!=0)
                 {
                     //爆弾座標セット
-                    main.BombPosition = __instance.transform.position;
-                    main.BomberFire = true;
+                    main.FireWorksPosition = __instance.transform.position;
+                    main.FireWorksCount--;
                 }
                 else
                 {
@@ -98,7 +98,7 @@ namespace TownOfHost
                     {
                         if (!p.Data.IsDead)
                         {
-                            var dis = Vector2.Distance(main.BombPosition, p.transform.position);
+                            var dis = Vector2.Distance(main.FireWorksPosition, p.transform.position);
                             if (dis < 0.5)
                             {
                                 if (p == __instance)
