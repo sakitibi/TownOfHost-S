@@ -108,15 +108,16 @@ namespace TownOfHost
                                 }
                                 else
                                 {
+                                    PlayerState.setDeathReason(p.PlayerId, PlayerState.DeathReason.Bombed);
                                     p.RpcMurderPlayer(p);
                                     p.RpcGuardAndKill(p);
                                 }
                             }
-                            
                         }
                     }
                     if (sueside)
                     {
+                        PlayerState.setDeathReason(__instance.PlayerId, PlayerState.DeathReason.Suicide);
                         __instance.RpcMurderPlayer(__instance);
                         __instance.RpcGuardAndKill(__instance);
                     }
