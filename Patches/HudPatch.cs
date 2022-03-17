@@ -140,8 +140,8 @@ namespace TownOfHost
                 case CustomRoles.SerialKiller:
                     TaskTextPrefix = $"<color={Utils.getRoleColorCode(CustomRoles.SerialKiller)}>{Utils.getRoleName(CustomRoles.SerialKiller)}\r\n{getString("SerialKillerInfo")}</color>\r\n";
                     break;
-                case CustomRoles.Syuー:
-                TaskTextPrefix = $"<color={Utils.getRoleColorCode(CustomRoles.Syuー)}>{Utils.getRoleName(CustomRoles.Syuー)}\r\n{getString("Syu-Info")}</color>\r\n";
+                case CustomRoles.Mare:
+                TaskTextPrefix = $"<color={Utils.getRoleColorCode(CustomRoles.Mare)}>{Utils.getRoleName(CustomRoles.Mare)}\r\n{getString("MareInfo")}</color>\r\n";
                     break;
                 case CustomRoles.Lighter:
                     TaskTextPrefix = $"<color={Utils.getRoleColorCode(CustomRoles.Lighter)}>{Utils.getRoleName(CustomRoles.Lighter)}\r\n{getString("LighterInfo")}</color>\r\n";

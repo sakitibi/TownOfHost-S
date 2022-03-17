@@ -150,21 +150,6 @@ namespace TownOfHost
                 }
             }
 
-            if (__instance.isSyuー())
-            {
-                var li = ShipStatus.Instance.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
-                if(li != null && li.IsActive) 
-                {
-                    Logger.SendToFile(__instance.name + "はしゅーであるかつキルは停電中ではなかったので、キルはキャンセルされました。");
-                    main.BlockKilling[__instance.PlayerId] = false;
-                    return false;
-                }
-                else
-                {
-                        Logger.SendToFile(__instance.name + "しゅーであるかつキルが停電中だったので、キルが許可されました。");
-                }
-            }
-
             if (__instance.isSerialKiller())
             {
                 __instance.RpcMurderPlayer(target);
@@ -241,13 +226,12 @@ namespace TownOfHost
                 main.BitPlayers.Add(target.PlayerId, (__instance.PlayerId, 0f));
                 return false;
             }
-            if (__instance.isSyuー())
+            if (__instance.isMare())
             {
                 var sy = ShipStatus.Instance.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
                 if (sy != null && sy.IsActive)//停電発生時
                 __instance.RpcMurderPlayer(target);
                 __instance.RpcGuardAndKill(target);
-                main.BitPlayers.Add(target.PlayerId, (__instance.PlayerId, 0f));
                 return false;
             }
 
@@ -521,16 +505,6 @@ namespace TownOfHost
                     }
                 }
 
-                //停電が鳴った時、ライターをしゅー視点見れる
-                if (PlayerControl.LocalPlayer.isLighter())//LocalPlayerがライター
-                    __instance.getCustomRole().isSyuー();//＿instanceがしゅー
-                var li = ShipStatus.Instance.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
-                if (li != null && li.IsActive)//停電発生時
-                {
-                    {
-                        RealName = $"<color={Utils.getRoleColorCode(CustomRoles.Sheriff)}>{RealName}</color>"; //__instanceの名前を黄色で表示
-                    }
-                }
                     /*if(main.AmDebugger.Value && main.BlockKilling.TryGetValue(__instance.PlayerId, out var isBlocked)) {
                         Mark = isBlocked ? "(true)" : "(false)";
                     }*/
