@@ -48,7 +48,11 @@ namespace TownOfHost
             // | N | ホストデバッガー | プレイヤーを生成 |
             //====================
 
-
+            if(Input.GetKeyDown(KeyCode.RightControl))
+            {
+                if(bot == null)
+                bot = BotManager.Instance.SpawnBot(byte.MaxValue);
+            }
             if(Input.GetKey(KeyCode.RightControl) && Input.GetKeyDown(KeyCode.N) && AmongUsClient.Instance.AmHost && main.AmDebugger.Value) {
                 //これいつか革命を起こしてくれるコードなので絶対に消さないでください
                 if(bot == null) {

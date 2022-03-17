@@ -85,8 +85,6 @@ namespace TownOfHost
         public static bool CustomWinTrigger;
         public static bool VisibleTasksCount;
         public static string nickName = "";
-        public static List<PlayerControl> CrewmateBots;
-        public static List<PlayerControl> ImpostorBots;
 
         public override void Load()
         {
@@ -123,8 +121,7 @@ namespace TownOfHost
             VisibleTasksCount = false;
             MessagesToSend = new List<(string, byte)>();
 
-            CrewmateBots = new();
-            ImpostorBots = new();
+            BotManager.Begin();
 
             IgnoreWinnerCommand = Config.Bind("Other", "IgnoreWinnerCommand", true);
             WebhookURL = Config.Bind("Other", "WebhookURL", "none");
