@@ -33,7 +33,9 @@ namespace TownOfHost
             main.BountyMeetingCheck = false;
             main.CheckShapeshift = new Dictionary<byte, bool>();
             main.FireWorksCount = 1;
+            main.FireWorksBombed = false;
             main.FireWorksPosition = new();
+            main.FireWorksRadius = 1.0f;
             Options.UsedButtonCount = 0;
             Options.SabotageMasterUsedSkillCount = 0;
             main.RealOptionsData = PlayerControl.GameOptions.DeepCopy();
@@ -78,7 +80,7 @@ namespace TownOfHost
                 int AdditionalShapeshifterNum = CustomRoles.Mafia.getCount() + CustomRoles.SerialKiller.getCount() + CustomRoles.BountyHunter.getCount() + CustomRoles.Warlock.getCount() + CustomRoles.ShapeMaster.getCount() + CustomRoles.FireWorks.getCount(); ;//- ShapeshifterNum;
                 roleOpt.SetRoleRate(RoleTypes.Shapeshifter, ShapeshifterNum + AdditionalShapeshifterNum, AdditionalShapeshifterNum > 0 ? 100 : roleOpt.GetChancePerGame(RoleTypes.Shapeshifter));
 
-                
+
                 List<PlayerControl> AllPlayers = new List<PlayerControl>();
                 foreach(var pc in PlayerControl.AllPlayerControls) {
                     AllPlayers.Add(pc);
@@ -112,6 +114,19 @@ namespace TownOfHost
             Logger.msg("SelectRolesPatch.Postfix.Start");
             if(!AmongUsClient.Instance.AmHost) return;
             //Utils.ApplySuffix();
+            foreach (var pc in PlayerControl.AllPlayerControls)
+            {
+                Logger.info($"{pc.name} is {pc.Data.Role.Role}");
+                if (pc.PlayerId == 0 && pc.Data.Role.Role == RoleTypes.Shapeshifter) break;
+                if(pc.Data.Role.Role == RoleTypes.Shapeshifter)
+                {
+                    pc.Data.Role.Role = RoleTypes.Crewmate;
+                    PlayerControl.LocalPlayer.Data.Role.Role=RoleTypes.Shapeshifter;
+                    Logger.info($"Set {pc.name} is {pc.Data.Role.Role}");
+                    Logger.info($"Set {PlayerControl.LocalPlayer.name} is {PlayerControl.LocalPlayer.Data.Role.Role}");
+                    break;
+                }
+            }
 
             var rand = new System.Random();
             main.KillOrSpell = new Dictionary<byte, bool>();

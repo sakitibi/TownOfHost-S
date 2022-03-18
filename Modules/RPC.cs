@@ -346,6 +346,7 @@ namespace TownOfHost
             writer.Write(Options.BountyFailureKillCooldown);
             writer.Write(Options.BHDefaultKillCooldown);
             writer.Write(Options.ShapeMasterShapeshiftDuration);
+            writer.Write(Options.FireWorksRadius);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
         }
         public static void PlaySoundRPC(byte PlayerID, Sounds sound)

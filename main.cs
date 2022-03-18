@@ -80,7 +80,9 @@ namespace TownOfHost
         public static bool isBountyKillSuccess;
         public static bool BountyTimerCheck;
         public static int FireWorksCount;
+        public static bool FireWorksBombed;
         public static Vector3 FireWorksPosition;
+        public static float FireWorksRadius;
         public static Dictionary<byte, bool> CheckShapeshift = new Dictionary<byte, bool>();
         public static byte ExiledJesterID;
         public static byte WonTerroristID;

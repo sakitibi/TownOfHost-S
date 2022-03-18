@@ -49,17 +49,38 @@ namespace TownOfHost
                 LowerInfoText.fontSizeMax = 2.0f;
             }
 
-            if(PlayerControl.LocalPlayer.isBountyHunter()) {//else使いたいのでここはif文
+            if (PlayerControl.LocalPlayer.isBountyHunter()) {//else使いたいのでここはif文
                 //バウンティハンター用処理
                 var target = PlayerControl.LocalPlayer.getBountyTarget();
                 LowerInfoText.text = target == null ? "null" : getString("BountyCurrentTarget") + ":" + PlayerControl.LocalPlayer.getBountyTarget().name;
                 LowerInfoText.enabled = target != null || main.AmDebugger.Value;
-            } else if(PlayerControl.LocalPlayer.isWitch()) {
+            } else if (PlayerControl.LocalPlayer.isWitch()) {
                 //魔女用処理
                 var ModeLang = PlayerControl.LocalPlayer.GetKillOrSpell() ? "WitchModeSpell" : "WitchModeKill";
                 LowerInfoText.text = getString("WitchCurrentMode") + ":" + getString(ModeLang);
                 LowerInfoText.enabled = true;
-            } else {
+            } else if (PlayerControl.LocalPlayer.isFireWorks()) {
+                //花火職人用処理
+                if (main.FireWorksBombed)
+                {
+                    LowerInfoText.enabled = false;
+
+                }
+                else if (main.FireWorksCount != 0)
+                {
+                    LowerInfoText.text = $"Place {main.FireWorksCount} Fireworks";
+                    LowerInfoText.enabled = true;
+                    //                } else if (PlayerControl.LocalPlayer.) 
+                    //                {
+
+                }
+                else
+                {
+                    LowerInfoText.text = "Fire Ready";
+                    LowerInfoText.enabled = true;
+                }
+            }
+            else { 
                 //バウンティハンターじゃない
                 LowerInfoText.enabled = false;
             }

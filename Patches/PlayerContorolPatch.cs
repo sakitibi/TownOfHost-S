@@ -85,42 +85,47 @@ namespace TownOfHost
             }
             else if (__instance.isFireWorks() && !main.CheckShapeshift[__instance.PlayerId])
             {
-                if (main.FireWorksCount!=0)
+                if (!main.FireWorksBombed)
                 {
-                    //爆弾座標セット
-                    main.FireWorksPosition = __instance.transform.position;
-                    main.FireWorksCount--;
-                }
-                else
-                {
-                    bool sueside = false;
-                    foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+                    if (main.FireWorksCount != 0)
                     {
-                        if (!p.Data.IsDead)
+                        //爆弾座標セット
+                        main.FireWorksPosition = __instance.transform.position;
+                        main.FireWorksCount--;
+                        Utils.NotifyRoles();
+                    }
+                    else
+                    {
+                        bool sueside = false;
+                        foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                         {
-                            var dis = Vector2.Distance(main.FireWorksPosition, p.transform.position);
-                            if (dis < 0.5)
+                            if (!p.Data.IsDead)
                             {
-                                if (p == __instance)
+                                var dis = Vector2.Distance(main.FireWorksPosition, p.transform.position);
+                                if (dis < main.FireWorksRadius)
                                 {
-                                    //自分は後回し
-                                    sueside = true;
-                                }
-                                else
-                                {
-                                    PlayerState.setDeathReason(p.PlayerId, PlayerState.DeathReason.Bombed);
-                                    p.RpcMurderPlayer(p);
-                                    p.RpcGuardAndKill(p);
+                                    if (p == __instance)
+                                    {
+                                        //自分は後回し
+                                        sueside = true;
+                                    }
+                                    else
+                                    {
+                                        PlayerState.setDeathReason(p.PlayerId, PlayerState.DeathReason.Bombed);
+                                        p.RpcMurderPlayer(p);
+                                        p.RpcGuardAndKill(p);
+                                    }
                                 }
                             }
                         }
+                        if (sueside)
+                        {
+                            PlayerState.setDeathReason(__instance.PlayerId, PlayerState.DeathReason.Suicide);
+                            __instance.RpcMurderPlayer(__instance);
+                            __instance.RpcGuardAndKill(__instance);
+                        }
                     }
-                    if (sueside)
-                    {
-                        PlayerState.setDeathReason(__instance.PlayerId, PlayerState.DeathReason.Suicide);
-                        __instance.RpcMurderPlayer(__instance);
-                        __instance.RpcGuardAndKill(__instance);
-                    }
+
                 }
             }
             else if(Options.CanMakeMadmateCount > main.SKMadmateNowCount && !__instance.isWarlock() && !main.CheckShapeshift[__instance.PlayerId])
@@ -203,7 +208,13 @@ namespace TownOfHost
                     return false;
                 }
             }
-            if(target.isMadGuardian()) {
+            if (__instance.isFireWorks())
+            {
+                Logger.SendToFile(__instance.name + "はFireWorksだったので、キルはキャンセルされました。");
+                main.BlockKilling[__instance.PlayerId] = false;
+                return false;
+            }
+            if (target.isMadGuardian()) {
                 var taskState = target.getPlayerTaskState();
                 if(taskState.isTaskFinished) {
                     int dataCountBefore = NameColorManager.Instance.NameColors.Count;

@@ -51,6 +51,7 @@ namespace TownOfHost {
                 }
                 if(AliveImpostorCount > 0) canUse = false;
             }
+            if(role == CustomRoles.FireWorks) canUse = main.FireWorksBombed;
             return canUse;
         }
         public static IntroTypes getIntroType(this CustomRoles role) {

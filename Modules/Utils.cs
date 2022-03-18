@@ -339,7 +339,22 @@ namespace TownOfHost
                     if(seer.GetKillOrSpell() == false) SelfSuffix = "Mode:" + getString("WitchModeKill");
                     if(seer.GetKillOrSpell() == true) SelfSuffix = "Mode:" + getString("WitchModeSpell");
                 }
+                if (seer.isFireWorks())
+                {
+                    if (main.FireWorksBombed)
+                    {
+                        SelfSuffix = $"";
 
+                    }
+                    else if (main.FireWorksCount != 0)
+                    {
+                        SelfSuffix = $"Place {main.FireWorksCount} Fireworks";
+                    }
+                    else
+                    {
+                        SelfSuffix = $"ReadyToFire";
+                    }
+                }
                 //RealNameを取得 なければ現在の名前をRealNamesに書き込む
                 string SeerRealName = seer.getRealName(isMeeting);
 
