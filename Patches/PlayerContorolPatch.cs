@@ -215,13 +215,15 @@ namespace TownOfHost
             }
             if (__instance.isMare())
             {
-                var sy = ShipStatus.Instance.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
-                if (sy != null && sy.IsActive)//停電発生時
-                __instance.RpcMurderPlayer(target);
-                __instance.RpcGuardAndKill(target);
-                return false;
+                if (!CustomRoles.Mare.CanUseKillButton())
+                {
+                    Logger.SendToFile(__instance.name + "のキルは停電中ではなかったので、キルはキャンセルされました。");
+                    main.BlockKilling[__instance.PlayerId] = false;
+                    return false;
+                } else {
+                    Logger.SendToFile(__instance.name + "はMareですが、停電中だったのでキルが許可されました。");
+                }
             }
-
 
             //==キル処理==
             __instance.RpcMurderPlayer(target);

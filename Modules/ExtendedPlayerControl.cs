@@ -245,11 +245,12 @@ namespace TownOfHost {
                     }
                     break;
                 case CustomRoles.Mare:
-                var ma = ShipStatus.Instance.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
-                        if(ma != null && ma.IsActive){//もし停電発生したなら～
-                            opt.PlayerSpeedMod = 2;//Mareの速度を２にする。
-                        }
-                        goto DefaultKillcooldown;
+                    var ma = ShipStatus.Instance.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
+                    if(ma != null && ma.IsActive){//もし停電が発生したなら
+                            opt.PlayerSpeedMod += 1;//Mareの速度を通常速度+1する
+                        opt.KillCooldown /= 2;//Mareのキルクールを÷2する
+                    }
+                    goto DefaultKillcooldown;
 
                 InfinityVent:
                     opt.RoleOptions.EngineerCooldown = 0;

@@ -51,6 +51,11 @@ namespace TownOfHost {
                 }
                 if(AliveImpostorCount > 0) canUse = false;
             }
+            if(role == CustomRoles.Mare) {
+                var ma = ShipStatus.Instance.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
+                if (ma != null && !ma.IsActive)
+                    canUse = false;
+            }
             return canUse;
         }
         public static IntroTypes getIntroType(this CustomRoles role) {
