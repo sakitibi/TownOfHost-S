@@ -213,6 +213,7 @@ namespace TownOfHost
                 main.BitPlayers.Add(target.PlayerId, (__instance.PlayerId, 0f));
                 return false;
             }
+            if (__instance.isMare())
 
 
             //==キル処理==

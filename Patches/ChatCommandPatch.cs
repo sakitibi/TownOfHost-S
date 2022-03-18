@@ -257,6 +257,11 @@ namespace TownOfHost
                     Utils.SendMessage(getString("LighterInfoLong"));
                     break;
 
+                case "Mare":
+                case "ma":
+                    Utils.SendMessage(getString("MareLong"));
+                    break;
+                
                 case "fox":
                 case "fo":
                     Utils.SendMessage(Utils.getRoleName(CustomRoles.Fox)+getString("FoxInfoLong"));
