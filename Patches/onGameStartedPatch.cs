@@ -114,19 +114,6 @@ namespace TownOfHost
             Logger.msg("SelectRolesPatch.Postfix.Start");
             if(!AmongUsClient.Instance.AmHost) return;
             //Utils.ApplySuffix();
-            foreach (var pc in PlayerControl.AllPlayerControls)
-            {
-                Logger.info($"{pc.name} is {pc.Data.Role.Role}");
-                if (pc.PlayerId == 0 && pc.Data.Role.Role == RoleTypes.Shapeshifter) break;
-                if(pc.Data.Role.Role == RoleTypes.Shapeshifter)
-                {
-                    pc.Data.Role.Role = RoleTypes.Crewmate;
-                    PlayerControl.LocalPlayer.Data.Role.Role=RoleTypes.Shapeshifter;
-                    Logger.info($"Set {pc.name} is {pc.Data.Role.Role}");
-                    Logger.info($"Set {PlayerControl.LocalPlayer.name} is {PlayerControl.LocalPlayer.Data.Role.Role}");
-                    break;
-                }
-            }
 
             var rand = new System.Random();
             main.KillOrSpell = new Dictionary<byte, bool>();
