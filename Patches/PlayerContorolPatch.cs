@@ -399,7 +399,7 @@ namespace TownOfHost
             //役職テキストの表示
             var RoleTextTransform = __instance.nameText.transform.Find("RoleText");
             var RoleText = RoleTextTransform.GetComponent<TMPro.TextMeshPro>();
-            if (RoleText != null && __instance != null)
+            if (RoleText != null && __instance != null && __instance.PlayerId > 250)
             {
                 var RoleTextData = Utils.GetRoleText(__instance);
                 if(Options.IsHideAndSeek) {

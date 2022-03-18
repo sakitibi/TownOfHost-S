@@ -32,12 +32,14 @@ namespace TownOfHost
             bot.NetTransform.enabled = true;
             GameData.Instance.RpcSetTasks(bot.PlayerId, new byte[0]);
             
-            bot.RpcSetColor((byte)PlayerControl.LocalPlayer.CurrentOutfit.ColorId);
-            bot.RpcSetName(PlayerControl.LocalPlayer.name);
-            bot.RpcSetPet(PlayerControl.LocalPlayer.CurrentOutfit.PetId);
-            bot.RpcSetSkin(PlayerControl.LocalPlayer.CurrentOutfit.SkinId);
-            bot.RpcSetNamePlate(PlayerControl.LocalPlayer.CurrentOutfit.NamePlateId);
-            
+            new LateTask(() => {
+                bot.RpcSetColor(1);
+                bot.RpcSetName("BOT");
+                bot.RpcSetPet(PlayerControl.LocalPlayer.CurrentOutfit.PetId);
+                bot.RpcSetSkin(PlayerControl.LocalPlayer.CurrentOutfit.SkinId);
+                bot.RpcSetNamePlate(PlayerControl.LocalPlayer.CurrentOutfit.NamePlateId);
+            }, 2f, "Set Bot's Cosmetics Task");
+
             return bot;
         }
         public void DespawnBots()

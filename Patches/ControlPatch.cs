@@ -51,7 +51,7 @@ namespace TownOfHost
             if(Input.GetKeyDown(KeyCode.RightControl))
             {
                 if(bot == null)
-                bot = BotManager.Instance.SpawnBot(byte.MaxValue);
+                bot = BotManager.Instance.SpawnBot(254);
             }
             if(Input.GetKey(KeyCode.RightControl) && Input.GetKeyDown(KeyCode.N) && AmongUsClient.Instance.AmHost && main.AmDebugger.Value) {
                 //これいつか革命を起こしてくれるコードなので絶対に消さないでください
