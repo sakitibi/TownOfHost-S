@@ -70,6 +70,22 @@ If they kill the player who is not their target, they will keep their next kill 
 | Cooldown time after killing anything other than the target(s) |
 | Kill cooldown time other than BountyHunter(s) |
 
+### FireWorks
+
+Team : Impostors<br>
+Decision : Shapeshifter<br>
+
+FireWorks can set fireworks (bombs) by shapeshifting.<br>
+But to explode it must be the last inmpostor.<br>
+The trigger of the explosion is also shapeshifting.
+Can't kill until explosion.
+
+#### Settings
+
+| Settings Name |
+|----------|
+| Explosion radius |
+
 ### SerialKiller
 
 Team : Impostor<br>
