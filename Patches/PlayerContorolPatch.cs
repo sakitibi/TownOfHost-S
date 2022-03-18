@@ -214,6 +214,13 @@ namespace TownOfHost
                 return false;
             }
             if (__instance.isMare())
+            {
+                var sy = ShipStatus.Instance.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
+                if (sy != null && sy.IsActive)//停電発生時
+                __instance.RpcMurderPlayer(target);
+                __instance.RpcGuardAndKill(target);
+                return false;
+            }
 
 
             //==キル処理==
