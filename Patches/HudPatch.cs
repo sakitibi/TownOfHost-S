@@ -59,7 +59,7 @@ namespace TownOfHost
                 var ModeLang = PlayerControl.LocalPlayer.GetKillOrSpell() ? "WitchModeSpell" : "WitchModeKill";
                 LowerInfoText.text = getString("WitchCurrentMode") + ":" + getString(ModeLang);
                 LowerInfoText.enabled = true;
-            } else if (PlayerControl.LocalPlayer.isFireWorks()) {
+            } else if (PlayerControl.LocalPlayer.isFireWorks() && !PlayerControl.LocalPlayer.Data.IsDead) {
                 //花火職人用処理
                 if (main.FireWorksBombed)
                 {
@@ -70,13 +70,13 @@ namespace TownOfHost
                 {
                     LowerInfoText.text = $"Place {main.FireWorksCount} Fireworks";
                     LowerInfoText.enabled = true;
-                    //                } else if (PlayerControl.LocalPlayer.) 
-                    //                {
-
+                } else if (Utils.NumOfAliveImpostors()!=1) 
+                {
+                    LowerInfoText.text = "Wait for that time";
                 }
                 else
                 {
-                    LowerInfoText.text = "Fire Ready";
+                    LowerInfoText.text = "Ready To Fire";
                     LowerInfoText.enabled = true;
                 }
             }

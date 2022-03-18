@@ -339,16 +339,19 @@ namespace TownOfHost
                     if(seer.GetKillOrSpell() == false) SelfSuffix = "Mode:" + getString("WitchModeKill");
                     if(seer.GetKillOrSpell() == true) SelfSuffix = "Mode:" + getString("WitchModeSpell");
                 }
-                if (seer.isFireWorks())
+                if (seer.isFireWorks()&& !seer.Data.IsDead)
                 {
                     if (main.FireWorksBombed)
                     {
                         SelfSuffix = $"";
-
                     }
                     else if (main.FireWorksCount != 0)
                     {
                         SelfSuffix = $"Place {main.FireWorksCount} Fireworks";
+                    }
+                    else if (Utils.NumOfAliveImpostors() != 1)
+                    {
+                        SelfSuffix = $"WaitForThatTime";
                     }
                     else
                     {
@@ -438,6 +441,18 @@ namespace TownOfHost
             var tmp = ChangeTo * 10;
             tmp += input;
             ChangeTo = Math.Clamp(tmp,0,max);
+        }
+
+        public static int NumOfAliveImpostors()
+        {
+            var AliveImpostorCount = 0;
+            foreach (var pc in PlayerControl.AllPlayerControls)
+            {
+                CustomRoles pc_role = pc.getCustomRole();
+                if (pc_role.isImpostor() && !pc.Data.IsDead) AliveImpostorCount++;
+            }
+            TownOfHost.Logger.info("生存しているインポスター:" + AliveImpostorCount + "人");
+            return AliveImpostorCount;
         }
     }
 }

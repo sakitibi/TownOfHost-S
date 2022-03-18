@@ -96,33 +96,37 @@ namespace TownOfHost
                     }
                     else
                     {
-                        bool sueside = false;
-                        foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+                        if (Utils.NumOfAliveImpostors() == 1)
                         {
-                            if (!p.Data.IsDead)
+                            main.FireWorksBombed = true;
+                            bool sueside = false;
+                            foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                             {
-                                var dis = Vector2.Distance(main.FireWorksPosition, p.transform.position);
-                                if (dis < main.FireWorksRadius)
+                                if (!p.Data.IsDead)
                                 {
-                                    if (p == __instance)
+                                    var dis = Vector2.Distance(main.FireWorksPosition, p.transform.position);
+                                    if (dis < main.FireWorksRadius)
                                     {
-                                        //自分は後回し
-                                        sueside = true;
-                                    }
-                                    else
-                                    {
-                                        PlayerState.setDeathReason(p.PlayerId, PlayerState.DeathReason.Bombed);
-                                        p.RpcMurderPlayer(p);
-                                        p.RpcGuardAndKill(p);
+                                        if (p == __instance)
+                                        {
+                                            //自分は後回し
+                                            sueside = true;
+                                        }
+                                        else
+                                        {
+                                            PlayerState.setDeathReason(p.PlayerId, PlayerState.DeathReason.Bombed);
+                                            p.RpcMurderPlayer(p);
+                                            p.RpcGuardAndKill(p);
+                                        }
                                     }
                                 }
                             }
-                        }
-                        if (sueside)
-                        {
-                            PlayerState.setDeathReason(__instance.PlayerId, PlayerState.DeathReason.Suicide);
-                            __instance.RpcMurderPlayer(__instance);
-                            __instance.RpcGuardAndKill(__instance);
+                            if (sueside)
+                            {
+                                PlayerState.setDeathReason(__instance.PlayerId, PlayerState.DeathReason.Suicide);
+                                __instance.RpcMurderPlayer(__instance);
+                                __instance.RpcGuardAndKill(__instance);
+                            }
                         }
                     }
 
@@ -210,9 +214,16 @@ namespace TownOfHost
             }
             if (__instance.isFireWorks())
             {
-                Logger.SendToFile(__instance.name + "はFireWorksだったので、キルはキャンセルされました。");
-                main.BlockKilling[__instance.PlayerId] = false;
-                return false;
+                if (!CustomRoles.FireWorks.CanUseKillButton())
+                {
+                    Logger.SendToFile(__instance.name + "はFireWorksだったので、キルはキャンセルされました。");
+                    main.BlockKilling[__instance.PlayerId] = false;
+                    return false;
+                }
+                else
+                {
+                    Logger.SendToFile(__instance.name + "はFireWorksですが、他のインポスターがいないのでキルが許可されました。");
+                }
             }
             if (target.isMadGuardian()) {
                 var taskState = target.getPlayerTaskState();
