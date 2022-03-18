@@ -27,18 +27,18 @@ namespace TownOfHost
             var bot = UnityEngine.Object.Instantiate(AmongUsClient.Instance.PlayerPrefab);
             bot.PlayerId = playerId;
             GameData.Instance.AddPlayer(bot);
-            AmongUsClient.Instance.Spawn(bot, -2, SpawnFlags.None);
             bot.transform.position = PlayerControl.LocalPlayer.transform.position;
             bot.NetTransform.enabled = true;
+            AmongUsClient.Instance.Spawn(bot, -2, SpawnFlags.None);
             GameData.Instance.RpcSetTasks(bot.PlayerId, new byte[0]);
             
-            new LateTask(() => {
+            //new LateTask(() => {
                 bot.RpcSetColor(1);
                 bot.RpcSetName("BOT");
                 bot.RpcSetPet(PlayerControl.LocalPlayer.CurrentOutfit.PetId);
                 bot.RpcSetSkin(PlayerControl.LocalPlayer.CurrentOutfit.SkinId);
                 bot.RpcSetNamePlate(PlayerControl.LocalPlayer.CurrentOutfit.NamePlateId);
-            }, 2f, "Set Bot's Cosmetics Task");
+            //}, 2f, "Set Bot's Cosmetics Task");
 
             return bot;
         }
