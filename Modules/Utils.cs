@@ -379,21 +379,29 @@ namespace TownOfHost
                 }
                 if (seer.isFireWorks()&& !seer.Data.IsDead)
                 {
-                    if (main.FireWorksBombed)
+                    switch (main.fireWorksState)
                     {
-                        SelfSuffix = $"";
-                    }
-                    else if (main.FireWorksCount != 0)
-                    {
-                        SelfSuffix = $"Place {main.FireWorksCount} Fireworks";
-                    }
-                    else if (Utils.NumOfAliveImpostors() != 1)
-                    {
-                        SelfSuffix = $"WaitForThatTime";
-                    }
-                    else
-                    {
-                        SelfSuffix = $"ReadyToFire";
+                        case FireWorksState.Initial:
+                        case FireWorksState.SetStart:
+                            SelfSuffix = $"Place {main.FireWorksCount} Fireworks";
+                            break;
+                        case FireWorksState.WaitTime:
+                            if(main.AliveImpostorCount == 1)
+                            {
+                                main.fireWorksState = FireWorksState.ReadyFire;
+                                SelfSuffix = $"ReadyToFire";
+                            }
+                            else
+                            {
+                                SelfSuffix = $"WaitForTime";
+                            }
+                            break;
+                        case FireWorksState.ReadyFire:
+                            SelfSuffix = $"ReadyToFire";
+                            break;
+                        case FireWorksState.FireEnd:
+                            SelfSuffix = $"";
+                            break;
                     }
                 }
                 //RealNameを取得 なければ現在の名前をRealNamesに書き込む
@@ -495,16 +503,16 @@ namespace TownOfHost
             ChangeTo = Math.Clamp(tmp, 0, max);
         }
 
-        public static int NumOfAliveImpostors()
+        public static void CountAliveImpostors()
         {
-            var AliveImpostorCount = 0;
+            int AliveImpostorCount = 0;
             foreach (var pc in PlayerControl.AllPlayerControls)
             {
                 CustomRoles pc_role = pc.getCustomRole();
                 if (pc_role.isImpostor() && !pc.Data.IsDead) AliveImpostorCount++;
             }
             TownOfHost.Logger.info("生存しているインポスター:" + AliveImpostorCount + "人");
-            return AliveImpostorCount;
+            main.AliveImpostorCount = AliveImpostorCount;
         }
     }
 }

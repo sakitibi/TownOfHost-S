@@ -69,24 +69,31 @@ namespace TownOfHost
             else if (PlayerControl.LocalPlayer.isFireWorks() && !PlayerControl.LocalPlayer.Data.IsDead)
             {
                 //花火職人用処理
-                if (main.FireWorksBombed)
+                switch (main.fireWorksState)
                 {
-                    LowerInfoText.enabled = false;
-
-                }
-                else if (main.FireWorksCount != 0)
-                {
-                    LowerInfoText.text = $"Place {main.FireWorksCount} Fireworks";
-                    LowerInfoText.enabled = true;
-                }
-                else if (Utils.NumOfAliveImpostors() != 1)
-                {
-                    LowerInfoText.text = "Wait for that time";
-                }
-                else
-                {
-                    LowerInfoText.text = "Ready To Fire";
-                    LowerInfoText.enabled = true;
+                    case FireWorksState.Initial:
+                    case FireWorksState.SetStart:
+                        LowerInfoText.text = $"Place {main.FireWorksCount} Fireworks";
+                        LowerInfoText.enabled = true;
+                        break;
+                    case FireWorksState.WaitTime:
+                        if (main.AliveImpostorCount == 1)
+                        {
+                            main.fireWorksState = FireWorksState.ReadyFire;
+                            LowerInfoText.text = "Ready To Fire";
+                        }
+                        else
+                        {
+                            LowerInfoText.text = "Wait for that time";
+                        }
+                        LowerInfoText.enabled = true;
+                        break;
+                    case FireWorksState.ReadyFire:
+                        LowerInfoText.enabled = true;
+                        break;
+                    case FireWorksState.FireEnd:
+                        LowerInfoText.enabled = false;
+                        break;
                 }
             }
             else

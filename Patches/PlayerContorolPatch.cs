@@ -47,6 +47,9 @@ namespace TownOfHost
                 Utils.CheckTerroristWin(target.Data);
             }
             PlayerState.isDead[target.PlayerId] = true;
+            Utils.CountAliveImpostors();
+            Utils.CustomSyncAllSettings();
+            Utils.NotifyRoles();
         }
     }
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.Shapeshift))]
@@ -88,51 +91,59 @@ namespace TownOfHost
             }
             else if (__instance.isFireWorks() && !main.CheckShapeshift[__instance.PlayerId])
             {
-                if (!main.FireWorksBombed)
+                switch (main.fireWorksState)
                 {
-                    if (main.FireWorksCount != 0)
-                    {
-                        //爆弾座標セット
+                    case FireWorksState.Initial:
+                    case FireWorksState.SetStart:
                         main.FireWorksPosition = __instance.transform.position;
                         main.FireWorksCount--;
-                        Utils.NotifyRoles();
-                    }
-                    else
-                    {
-                        if (Utils.NumOfAliveImpostors() == 1)
+                        if (main.FireWorksCount == 0)
                         {
-                            main.FireWorksBombed = true;
-                            bool sueside = false;
-                            foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+                            main.fireWorksState = FireWorksState.WaitTime;
+                        }
+                        else
+                        {
+                            main.fireWorksState = FireWorksState.SetStart;
+                        }
+                        Utils.NotifyRoles();
+                        break;
+                    case FireWorksState.WaitTime:
+                        break;
+                    case FireWorksState.ReadyFire:
+                        bool sueside = false;
+                        foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+                        {
+                            if (!p.Data.IsDead)
                             {
-                                if (!p.Data.IsDead)
+                                var dis = Vector2.Distance(main.FireWorksPosition, p.transform.position);
+                                if (dis < main.FireWorksRadius)
                                 {
-                                    var dis = Vector2.Distance(main.FireWorksPosition, p.transform.position);
-                                    if (dis < main.FireWorksRadius)
+                                    main.FireWorksCount++;
+                                    if (p == __instance)
                                     {
-                                        if (p == __instance)
-                                        {
-                                            //自分は後回し
-                                            sueside = true;
-                                        }
-                                        else
-                                        {
-                                            PlayerState.setDeathReason(p.PlayerId, PlayerState.DeathReason.Bombed);
-                                            p.RpcMurderPlayer(p);
-                                            p.RpcGuardAndKill(p);
-                                        }
+                                        //自分は後回し
+                                        sueside = true;
+                                    }
+                                    else
+                                    {
+                                        PlayerState.setDeathReason(p.PlayerId, PlayerState.DeathReason.Bombed);
+                                        p.RpcMurderPlayer(p);
+                                        p.RpcGuardAndKill(p);
                                     }
                                 }
                             }
-                            if (sueside)
-                            {
-                                PlayerState.setDeathReason(__instance.PlayerId, PlayerState.DeathReason.Suicide);
-                                __instance.RpcMurderPlayer(__instance);
-                                __instance.RpcGuardAndKill(__instance);
-                            }
                         }
-                    }
-
+                        if (sueside)
+                        {
+                            PlayerState.setDeathReason(__instance.PlayerId, PlayerState.DeathReason.Suicide);
+                            __instance.RpcMurderPlayer(__instance);
+                            __instance.RpcGuardAndKill(__instance);
+                        }
+                        main.fireWorksState = FireWorksState.FireEnd;
+                        Utils.NotifyRoles();
+                        break;
+                    case FireWorksState.FireEnd:
+                        break;
                 }
             }
             else if (Options.CanMakeMadmateCount > main.SKMadmateNowCount && !__instance.isWarlock() && !main.CheckShapeshift[__instance.PlayerId])

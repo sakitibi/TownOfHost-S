@@ -60,7 +60,10 @@ namespace TownOfHost
                 }
                 if (AliveImpostorCount > 0) canUse = false;
             }
-            if(role == CustomRoles.FireWorks) canUse = main.FireWorksBombed;
+            if (role == CustomRoles.FireWorks)
+            {
+                canUse = (main.fireWorksState == FireWorksState.Initial || main.fireWorksState == FireWorksState.FireEnd);
+            }
             return canUse;
         }
         public static IntroTypes getIntroType(this CustomRoles role)

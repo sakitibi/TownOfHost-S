@@ -34,7 +34,8 @@ namespace TownOfHost
             main.BountyMeetingCheck = false;
             main.CheckShapeshift = new Dictionary<byte, bool>();
             main.FireWorksCount = 1;
-            main.FireWorksBombed = false;
+            main.fireWorksState = FireWorksState.Initial;
+            main.FireWorksBombKill = 0;
             main.FireWorksPosition = new();
             main.FireWorksRadius = 1.0f;
             Options.UsedButtonCount = 0;
@@ -308,6 +309,7 @@ namespace TownOfHost
                         }
                 }, 3f, "SetImpostorForServer");
             }
+            Utils.CountAliveImpostors();
             Utils.CustomSyncAllSettings();
             SetColorPatch.IsAntiGlitchDisabled = false;
 

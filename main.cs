@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.IL2CPP;
@@ -73,14 +73,16 @@ namespace TownOfHost
         public static List<PlayerControl> SpelledPlayer = new List<PlayerControl>();
         public static Dictionary<byte, bool> KillOrSpell = new Dictionary<byte, bool>();
         public static Dictionary<byte, bool> FirstCursedCheck = new Dictionary<byte, bool>();
+        public static int AliveImpostorCount;
         public static int SKMadmateNowCount;
         public static bool witchMeeting;
         public static bool isShipStart;
         public static bool BountyMeetingCheck;
         public static bool isBountyKillSuccess;
         public static bool BountyTimerCheck;
+        public static FireWorksState fireWorksState;
         public static int FireWorksCount;
-        public static bool FireWorksBombed;
+        public static int FireWorksBombKill;
         public static Vector3 FireWorksPosition;
         public static float FireWorksRadius;
         public static Dictionary<byte, bool> CheckShapeshift = new Dictionary<byte, bool>();
@@ -277,4 +279,13 @@ namespace TownOfHost
         SelfVote,
         Skip
     }
+    public enum FireWorksState
+    {
+        Initial,
+        SetStart,
+        WaitTime,
+        ReadyFire,
+        FireEnd
+    }
+
 }
