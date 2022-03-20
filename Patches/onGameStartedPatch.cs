@@ -33,11 +33,11 @@ namespace TownOfHost
             main.BountyTimerCheck = false;
             main.BountyMeetingCheck = false;
             main.CheckShapeshift = new Dictionary<byte, bool>();
-            main.FireWorksCount = 1;
+            main.FireWorksCount = Options.FireWorksCount;
             main.fireWorksState = FireWorksState.Initial;
             main.FireWorksBombKill = 0;
             main.FireWorksPosition = new();
-            main.FireWorksRadius = 1.0f;
+            main.FireWorksRadius = Options.FireWorksRadius;
             Options.UsedButtonCount = 0;
             Options.SabotageMasterUsedSkillCount = 0;
             main.RealOptionsData = PlayerControl.GameOptions.DeepCopy();

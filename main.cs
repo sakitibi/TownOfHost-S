@@ -83,7 +83,7 @@ namespace TownOfHost
         public static FireWorksState fireWorksState;
         public static int FireWorksCount;
         public static int FireWorksBombKill;
-        public static Vector3 FireWorksPosition;
+        public static List<Vector3> FireWorksPosition;
         public static float FireWorksRadius;
         public static Dictionary<byte, bool> CheckShapeshift = new Dictionary<byte, bool>();
         public static byte ExiledJesterID;

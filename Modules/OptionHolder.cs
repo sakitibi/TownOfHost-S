@@ -43,7 +43,8 @@ namespace TownOfHost
         public static int BountySuccessKillCooldown = 2;
         public static int BountyFailureKillCooldown = 50;
         public static int BHDefaultKillCooldown = 30;
-        public static float FireWorksRadius = 0.5f;
+        public static int FireWorksCount = 1;
+        public static float FireWorksRadius = 1.0f;
         public static int VampireKillDelay = 10;
         public static int SabotageMasterSkillLimit = 0;
         public static bool SabotageMasterFixesDoors = false;

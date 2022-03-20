@@ -95,6 +95,8 @@ namespace TownOfHost
                     int BountyFailureKillCooldown = reader.ReadInt32();
                     int BHDefaultKillCooldown = reader.ReadInt32();
                     int ShapeMasterShapeshiftDuration = reader.ReadInt32();
+                    int FireWorksCount = reader.ReadInt32();
+                    float FireWorksRadius = reader.ReadSingle();
                     RPC.SyncCustomSettings(
                         Options.roleCounts,
                         IsHideAndSeek,
@@ -139,7 +141,9 @@ namespace TownOfHost
                         CanMakeMadmateCount,
                         MadGuardianCanSeeBarrier,
                         MadSnitchTasks,
-                        MayorAdditionalVote
+                        MayorAdditionalVote,
+                        FireWorksCount,
+                        FireWorksRadius
                     );
                     break;
                 case (byte)CustomRPC.JesterExiled:
@@ -237,7 +241,9 @@ namespace TownOfHost
                 int CanMakeMadmateCount,
                 bool MadGuardianCanSeeBarrier,
                 int MadSnitchTasks,
-                int MayorAdditionalVote
+                int MayorAdditionalVote,
+                int FireWorksCount,
+                float FireWorksRadius
             )
         {
             Options.roleCounts = roleCounts;
@@ -301,6 +307,9 @@ namespace TownOfHost
             Options.MadSnitchTasks = MadSnitchTasks;
 
             Options.MayorAdditionalVote = MayorAdditionalVote;
+
+            Options.FireWorksCount = FireWorksCount;
+            Options.FireWorksRadius = FireWorksRadius;
         }
         //SyncCustomSettingsRPC Sender
         public static void SyncCustomSettingsRPC()
@@ -352,6 +361,7 @@ namespace TownOfHost
             writer.Write(Options.BountyFailureKillCooldown);
             writer.Write(Options.BHDefaultKillCooldown);
             writer.Write(Options.ShapeMasterShapeshiftDuration);
+            writer.Write(Options.FireWorksCount);
             writer.Write(Options.FireWorksRadius);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
         }

@@ -386,15 +386,7 @@ namespace TownOfHost
                             SelfSuffix = $"Place {main.FireWorksCount} Fireworks";
                             break;
                         case FireWorksState.WaitTime:
-                            if(main.AliveImpostorCount == 1)
-                            {
-                                main.fireWorksState = FireWorksState.ReadyFire;
-                                SelfSuffix = $"ReadyToFire";
-                            }
-                            else
-                            {
-                                SelfSuffix = $"WaitForTime";
-                            }
+                            SelfSuffix = $"WaitForTime";
                             break;
                         case FireWorksState.ReadyFire:
                             SelfSuffix = $"ReadyToFire";

@@ -70,7 +70,8 @@ namespace TownOfHost
             var MadSnitchTasks = new PageObject(AdvImpostorRoleOptions, () => $"<color={Utils.getRoleColorCode(CustomRoles.MadSnitch)}>{getString("MadSnitchTasks")}</color>: {Options.MadSnitchTasks}{main.TextCursor}", true, () => { Options.MadSnitchTasks = 0; }, (n) => Utils.ChangeInt(ref Options.MadSnitchTasks, n, 99));
 
             var AdvImpostorRoleOptions2 = new PageObject(AdvRoleOptions, () => getString("AdvancedImpostorRoleOptions2"));
-            var FireWorksRadius = new PageObject(AdvImpostorRoleOptions2, () => $"<color={Utils.getRoleColorCode(CustomRoles.FireWorks)}>{getString("FireWorksRadius")}</color>(s): {Options.FireWorksRadius}{main.TextCursor}", true, () => { Options.FireWorksRadius +=0.5f;if (Options.FireWorksRadius > 3.0f) Options.FireWorksRadius = 0.5f; });
+            var FireWorksCount = new PageObject(AdvImpostorRoleOptions2, () => $"<color={Utils.getRoleColorCode(CustomRoles.FireWorks)}>{getString("FireWorksCount")}</color>(s): {Options.FireWorksCount}{main.TextCursor}", true, () => { Options.FireWorksCount += 1; if (Options.FireWorksCount > 3) Options.FireWorksCount = 1; });
+            var FireWorksRadius = new PageObject(AdvImpostorRoleOptions2, () => $"<color={Utils.getRoleColorCode(CustomRoles.FireWorks)}>{getString("FireWorksRadius")}</color>(s): {Options.FireWorksRadius}{main.TextCursor}", true, () => { Options.FireWorksRadius += 0.5f; if (Options.FireWorksRadius > 3.0f) Options.FireWorksRadius = 0.5f; });
 
             var AdvCrewmateRoleOptions = new PageObject(AdvRoleOptions, () => getString("AdvancedCrewmateRoleOptions"));
             var MayorAdditionalVote = new PageObject(AdvCrewmateRoleOptions, () => $"<color={Utils.getRoleColorCode(CustomRoles.Mayor)}>{getString("MayorAdditionalVote")}</color>: {Options.MayorAdditionalVote}{main.TextCursor}", true, () => { Options.MayorAdditionalVote = 0; }, (n) => Utils.ChangeInt(ref Options.MayorAdditionalVote, n, 99));

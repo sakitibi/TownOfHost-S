@@ -95,7 +95,7 @@ namespace TownOfHost
                 {
                     case FireWorksState.Initial:
                     case FireWorksState.SetStart:
-                        main.FireWorksPosition = __instance.transform.position;
+                        main.FireWorksPosition.Add(__instance.transform.position);
                         main.FireWorksCount--;
                         if (main.FireWorksCount == 0)
                         {
@@ -115,20 +115,23 @@ namespace TownOfHost
                         {
                             if (!p.Data.IsDead)
                             {
-                                var dis = Vector2.Distance(main.FireWorksPosition, p.transform.position);
-                                if (dis < main.FireWorksRadius)
+                                foreach(var pos in main.FireWorksPosition)
                                 {
-                                    main.FireWorksCount++;
-                                    if (p == __instance)
+                                    var dis = Vector2.Distance(pos , p.transform.position);
+                                    if (dis < main.FireWorksRadius)
                                     {
-                                        //自分は後回し
-                                        sueside = true;
-                                    }
-                                    else
-                                    {
-                                        PlayerState.setDeathReason(p.PlayerId, PlayerState.DeathReason.Bombed);
-                                        p.RpcMurderPlayer(p);
-                                        p.RpcGuardAndKill(p);
+                                        main.FireWorksCount++;
+                                        if (p == __instance)
+                                        {
+                                            //自分は後回し
+                                            sueside = true;
+                                        }
+                                        else
+                                        {
+                                            PlayerState.setDeathReason(p.PlayerId, PlayerState.DeathReason.Bombed);
+                                            p.RpcMurderPlayer(p);
+                                            p.RpcGuardAndKill(p);
+                                        }
                                     }
                                 }
                             }

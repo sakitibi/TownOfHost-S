@@ -51,7 +51,13 @@ namespace TownOfHost
                 LowerInfoText.fontSizeMin = 2.0f;
                 LowerInfoText.fontSizeMax = 2.0f;
             }
-
+            if (CustomRoles.FireWorks.isEnable() && main.fireWorksState == FireWorksState.WaitTime && main.AliveImpostorCount == 1)
+            {
+                //花火職人のステート移行、表示の変更
+                main.fireWorksState = FireWorksState.ReadyFire;
+                Utils.CustomSyncAllSettings();
+                Utils.NotifyRoles();
+            }
             if (PlayerControl.LocalPlayer.isBountyHunter())
             {
                 //バウンティハンター用処理
@@ -77,18 +83,11 @@ namespace TownOfHost
                         LowerInfoText.enabled = true;
                         break;
                     case FireWorksState.WaitTime:
-                        if (main.AliveImpostorCount == 1)
-                        {
-                            main.fireWorksState = FireWorksState.ReadyFire;
-                            LowerInfoText.text = "Ready To Fire";
-                        }
-                        else
-                        {
-                            LowerInfoText.text = "Wait for that time";
-                        }
+                        LowerInfoText.text = "Wait for that time";
                         LowerInfoText.enabled = true;
                         break;
                     case FireWorksState.ReadyFire:
+                        LowerInfoText.text = "Ready To Fire";
                         LowerInfoText.enabled = true;
                         break;
                     case FireWorksState.FireEnd:
