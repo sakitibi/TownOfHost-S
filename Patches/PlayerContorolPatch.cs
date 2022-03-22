@@ -86,7 +86,53 @@ namespace TownOfHost
                     }
                 }
             }
-            if (Options.CanMakeMadmateCount > main.SKMadmateNowCount && !__instance.isWarlock() && !main.CheckShapeshift[__instance.PlayerId])
+            if (__instance.isSniper() && main.sniperBulletCount>0)
+            {
+                //スナイパーで弾が残ってたら
+                if (!main.CheckShapeshift[__instance.PlayerId])
+                {
+                    //変身のタイミングでスナイプ地点の登録
+                    main.sniperPosition = __instance.transform.position;
+                }
+                else
+                {
+                    Dictionary<PlayerControl, float> dot_list = new Dictionary<PlayerControl, float>();
+                    //一発消費して
+                    main.sniperBulletCount--;
+                    //変身開始地点→解除地点のベクトル
+                    var dir = (__instance.transform.position-main.sniperPosition).normalized;
+
+                    foreach(var pc in PlayerControl.AllPlayerControls)
+                    {
+                        if (!pc.Data.IsDead && pc != __instance)
+                        {
+                            //死んでいない対象の方角ベクトル作成
+                            var target_pos = pc.transform.position - main.sniperPosition;
+                            //正規化して
+                            var target_dir = target_pos.normalized;
+                            //内積を取る
+                            var target_dot = Vector3.Dot(dir, target_dir);
+                            Logger.info($"{pc.name}:pos={target_pos} dir={target_dir}");
+                            Logger.info($"  Dot={target_dot}");
+
+                            if (target_dot > 0.99)
+                            {
+                                //ある程度正確なら登録
+                                dot_list.Add(pc, target_dot);
+                            }
+                        }
+                    }
+                    if (dot_list.Count() != 0)
+                    {
+                        //内積が一番大きい=一番正確な対象がターゲット
+                        var snipedTarget = dot_list.OrderBy(c => c.Value).Last().Key;
+                        PlayerState.setDeathReason(__instance.PlayerId, PlayerState.DeathReason.Sniper);
+                        snipedTarget.MurderPlayer(snipedTarget);
+                        RPC.PlaySoundRPC(__instance.PlayerId, Sounds.KillSound);
+                    }
+                }
+            }
+            if (Options.CanMakeMadmateCount > main.SKMadmateNowCount && !__instance.isWarlock() && !__instance.isSniper() && !main.CheckShapeshift[__instance.PlayerId])
             {//変身したとき一番近い人をマッドメイトにする処理
                 Vector2 __instancepos = __instance.transform.position;//変身者の位置
                 Dictionary<PlayerControl, float> mpdistance = new Dictionary<PlayerControl, float>();

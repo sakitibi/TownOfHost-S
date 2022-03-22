@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.IL2CPP;
@@ -73,6 +73,8 @@ namespace TownOfHost
         public static List<PlayerControl> SpelledPlayer = new List<PlayerControl>();
         public static Dictionary<byte, bool> KillOrSpell = new Dictionary<byte, bool>();
         public static Dictionary<byte, bool> FirstCursedCheck = new Dictionary<byte, bool>();
+        public static int sniperBulletCount;
+        public static Vector3 sniperPosition;
         public static int SKMadmateNowCount;
         public static bool witchMeeting;
         public static bool isShipStart;
@@ -164,6 +166,7 @@ namespace TownOfHost
                 {CustomRoles.Warlock, "#ff0000"},
                 {CustomRoles.SerialKiller, "#ff0000"},
                 {CustomRoles.Lighter, "#eee5be"},
+                {CustomRoles.Sniper, "#ff0000"},
                 {CustomRoles.Fox, "#e478ff"},
                 {CustomRoles.Troll, "#00ff00"}
             };
@@ -225,6 +228,7 @@ namespace TownOfHost
         Warlock,
         SerialKiller,
         Lighter,
+        Sniper,
         Fox,
         Troll
     }

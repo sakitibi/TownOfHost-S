@@ -8,6 +8,7 @@ Shapeshifter,Shapeshifter,シェイプシフター
 BountyHunter,BountyHunter,バウンティハンター
 SerialKiller,SerialKiller,シリアルキラー
 ShapeMaster,ShapeMaster,シェイプマスター
+Sniper,Sniper,スナイパー
 Vampire,Vampire,ヴァンパイア
 Warlock,Warlock,ウォーロック
 Witch,Witch,ウィッチ
@@ -31,6 +32,7 @@ TeamImpostor,Team Impostor,インポスター陣営
 BountyHunterInfo,Hunt your bounty down,標的を確実に仕留めよう
 SerialKillerInfo,Keep killng to win,殺人衝動が抑えられない
 ShapeMasterInfo,Shapeshift and confuse your enemies,変身して敵を混乱させよう
+SniperInfo,Sniper the target,敵を撃ち抜け
 VampireInfo,Kill the Crewmates with your bites,クルーを噛んで全滅させよう
 WarlockInfo,Curse and kill your enemies,敵を呪い殺そう
 WitchInfo,Spell your enemies,敵に魔術をかけよう
@@ -55,6 +57,7 @@ TrollInfo,Die to win,自爆しよう
 BountyHunterInfoLong,"(Impostors):\nThe first time you try to kill someone, a target is displayed.\nWhen you kill the displayed target, your killcool is halved.\nIf you kill someone else, your killcool is keep standard.",(インポスター陣営):\n標的をキルすると次のｷﾙｸｰﾙが半分になる。\n標的以外をキルするとｷﾙｸｰﾙは通常になる。
 SerialKillerInfoLong,"(Impostors):\nThe kill cool time is shorter than that of other Impostors,\nbut if the kill is not made before the shapeshift's cool time expires, will suicide.",(インポスター陣営):\nキルクールが他のインポスターに比べて短い反面、変身のクールタイムが明ける前にキルしないと自爆する。
 ShapeMasterInfoLong,"(Impostors):\nImpostors specializing in shape-shifting.\nThere is no cooldown, but the transformation lasts only 10 seconds.",(インポスター陣営):\nシェイプシフトに特化したｲﾝﾎﾟｽﾀ-。\nクールダウンはないが変身は10秒間しかできない。
+SnaiperInfoLong,"(Impostors):\n.",(インポスター陣営):\変身で射撃地点をセット。変身解除で方角をセットし射撃。遠くの敵を撃ち抜け
 VampireInfoLong,"(Impostors):\nDelayed kills are possible by biting the player.\n(The player dies when the time elapses OR the meeting starts.)\nIn the case of baits, the player dies immediately and is forced to call the meeting.",(インポスター陣営):\nプレイヤーを噛む事で遅延キルが可能。\n(時間が経過or会議が始まると死亡する。)\nベイトの場合即死亡し、強制的に通報が入る。
 WarlockInfoLong,"(Impostors):\nWhen he transforms, the curse is placed on the nearest person.\nThe next time you press the transform button, the cursed person kills the nearest person. \nIf you curse someone, you cannot get a normal kill.\nThe cursed person is marked at the next meeting and dies after the meeting.",(インポスター陣営):\n変身すると一番近くの人に呪いがかかる。\n次から変身ボタンを押すと、呪われた人が一番近い人をキルする。\n誰かを呪った場合、普通のキルはできない。呪われた人は次の会議でマークがつき、会議後に死ぬ。
 WitchInfoLong,"(Impostors):\nKills toggle between 'Kill' and 'Spell', kills on the Spell display can be cursed.\nThe cursed person will suffix a '†' at the meeting\nand will die after the meeting if the witch is not expelled.",(インポスター陣営):\nキルをすると「Kill」と「Spell」が切り変わる。\nSpellの表示でキルすると呪うことが出来る。\n呪いをかけられた人は会議で「†」が付き魔女を追放しなければ会議後に死亡する。
@@ -89,6 +92,7 @@ BountyTargetChangeTime,Bounty Target Change Time,バウンティハンターの�
 BountySuccessKillCooldown,Bounty Success Kill Cooldown,バウンティハンターのターゲット殺害時のキルクール
 BountyFailureKillCooldown,Bounty Failure Kill Cool Down,バウンティハンターのターゲット以外殺害時のキルクール
 BHDefaultKillCooldown,Bounty Default Kill Cooldown,バウンティハンターのデフォルトのキルクール
+SniperBulletCount,Sniper bullet count,スナイパーの弾数
 VampireKillDelay,Vampire Kill Delay(s),ヴァンパイアの殺害までの時間(秒)
 SabotageMasterSkillLimit,SabotageMaster Fixes Sabotage Limit(Ignore Closing Doors),ｻﾎﾞﾀｰｼﾞｭﾏｽﾀｰがｻﾎﾞﾀｰｼﾞｭに対して能力を使用できる回数(ﾄﾞｱ閉鎖は除く)
 MadmateCanFixLightsOut,Madmate Can Fix Lights Out,マッドメイトが停電を直すことができる
@@ -152,6 +156,7 @@ DeathReason.Vote,Exiled,追放
 DeathReason.Suicide,Suicide,自爆
 DeathReason.Spell,Spelled,呪殺
 DeathReason.Bite,Bited,噛殺
+DeathReason.Sniper,Sniper,狙撃
 DeathReason.Misfire,Misfire,誤爆
 DeathReason.Disconnected,Disconnected,回線切断
 DeathReason.etc,etc,その他

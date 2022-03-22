@@ -502,6 +502,7 @@ namespace TownOfHost
         public static bool isBountyHunter(this PlayerControl target) { return target.getCustomRole() == CustomRoles.BountyHunter; }
         public static bool isWitch(this PlayerControl target) { return target.getCustomRole() == CustomRoles.Witch; }
         public static bool isShapeMaster(this PlayerControl target) { return target.getCustomRole() == CustomRoles.ShapeMaster; }
+        public static bool isSniper(this PlayerControl target) { return target.getCustomRole() == CustomRoles.Sniper; }
         public static bool isWarlock(this PlayerControl target) { return target.getCustomRole() == CustomRoles.Warlock; }
         public static bool isSerialKiller(this PlayerControl target) { return target.getCustomRole() == CustomRoles.SerialKiller; }
     }

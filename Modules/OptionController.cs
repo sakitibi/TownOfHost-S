@@ -27,6 +27,7 @@ namespace TownOfHost
             var BountyHunter = new PageObject(RoleOptions, CustomRoles.BountyHunter);
             var SerialKiller = new PageObject(RoleOptions, CustomRoles.SerialKiller);
             var ShapeMaster = new PageObject(RoleOptions, CustomRoles.ShapeMaster);
+            var Sniper = new PageObject(RoleOptions, CustomRoles.Sniper);
             var Vampire = new PageObject(RoleOptions, CustomRoles.Vampire);
             var Warlock = new PageObject(RoleOptions, CustomRoles.Warlock);
             var Witch = new PageObject(RoleOptions, CustomRoles.Witch);
@@ -61,6 +62,7 @@ namespace TownOfHost
             var SerialKillerLimit = new PageObject(AdvImpostorRoleOptions, () => $"<color={Utils.getRoleColorCode(CustomRoles.SerialKiller)}>{getString("SerialKillerLimit")}</color>(s): {Options.SerialKillerLimit}{main.TextCursor}", true, () => { Options.SerialKillerLimit = 0; }, (n) => Utils.ChangeInt(ref Options.SerialKillerLimit, n, 999));
             var VampireKillDelay = new PageObject(AdvImpostorRoleOptions, () => $"<color={Utils.getRoleColorCode(CustomRoles.Vampire)}>{getString("VampireKillDelay")}</color>(s): {Options.VampireKillDelay}{main.TextCursor}", true, () => { Options.VampireKillDelay = 0; }, (n) => Utils.ChangeInt(ref Options.VampireKillDelay, n, 999));
             var ShapeMasterShapeshiftDuration = new PageObject(AdvImpostorRoleOptions, () => $"<color={Utils.getRoleColorCode(CustomRoles.ShapeMaster)}>{getString("ShapeMasterShapeshiftDuration")}</color>(s): {Options.ShapeMasterShapeshiftDuration}{main.TextCursor}", true, () => { Options.ShapeMasterShapeshiftDuration = 0; }, (n) => Utils.ChangeInt(ref Options.ShapeMasterShapeshiftDuration, n, 100));
+            var SniperBulletCount= new PageObject(AdvImpostorRoleOptions, () => $"<color={Utils.getRoleColorCode(CustomRoles.Sniper)}>{getString("SniperBulletCount")}</color>(s): {Options.SniperBulletCount}{main.TextCursor}", true, () => { Options.SniperBulletCount = 0; }, (n) => Utils.ChangeInt(ref Options.SniperBulletCount, n, 10));
             var MadmateCanFixLightsOut = new PageObject(AdvImpostorRoleOptions, () => $"<color={Utils.getRoleColorCode(CustomRoles.Madmate)}>{getString("MadmateCanFixLightsOut")}</color>: {Utils.getOnOff(Options.MadmateCanFixLightsOut)}", true, () => { Options.MadmateCanFixLightsOut = !Options.MadmateCanFixLightsOut; });
             var MadmateCanFixComms = new PageObject(AdvImpostorRoleOptions, () => $"<color={Utils.getRoleColorCode(CustomRoles.Madmate)}>{getString("MadmateCanFixComms")}</color>: {Utils.getOnOff(Options.MadmateCanFixComms)}", true, () => { Options.MadmateCanFixComms = !Options.MadmateCanFixComms; });
             var MadGuardianCanSeeBarrier = new PageObject(AdvImpostorRoleOptions, () => $"<color={Utils.getRoleColorCode(CustomRoles.MadGuardian)}>{getString("MadGuardianCanSeeWhoTriedToKill")}</color>: {Utils.getOnOff(Options.MadGuardianCanSeeWhoTriedToKill)}", true, () => { Options.MadGuardianCanSeeWhoTriedToKill = !Options.MadGuardianCanSeeWhoTriedToKill; });
