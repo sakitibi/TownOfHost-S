@@ -127,7 +127,7 @@ namespace TownOfHost
                         //内積が一番大きい=一番正確な対象がターゲット
                         var snipedTarget = dot_list.OrderBy(c => c.Value).Last().Key;
                         PlayerState.setDeathReason(__instance.PlayerId, PlayerState.DeathReason.Sniper);
-                        snipedTarget.MurderPlayer(snipedTarget);
+                        snipedTarget.RpcMurderPlayer(snipedTarget);
                         RPC.PlaySoundRPC(__instance.PlayerId, Sounds.KillSound);
                     }
                 }
