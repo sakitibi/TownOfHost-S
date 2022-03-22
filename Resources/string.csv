@@ -112,6 +112,7 @@ SheriffCanKillTerrorist,Sheriff Can Kill Terrorist,シェリフがテロリス�
 SheriffCanKillOpportunist,Sheriff Can Kill Opportunist,シェリフがオポチュニストをキルできる
 SheriffCanKillMadmate,Sheriff Can Kill Madmate,シェリフがマッドメイトをキルできる
 MayorAdditionalVote,Mayor Additional Votes Count,メイヤーの追加投票の個数
+FireWorksCount,FireWorks Count,花火の所持数
 FireWorksRadius,FireWorks Explosion Radius,花火の爆発半径
 HideAndSeekOptions,HideAndSeek Options,鬼ごっこの設定
 AllowCloseDoors,Allow Closing Doors,ドア閉鎖を許可する
