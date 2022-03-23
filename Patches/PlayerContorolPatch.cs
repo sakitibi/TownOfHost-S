@@ -117,16 +117,24 @@ namespace TownOfHost
 
                             if (target_dot > 0.99)
                             {
-                                //ある程度正確なら登録
-                                dot_list.Add(pc, target_dot);
+                                //ある程度正確ならターゲットとの誤差確認
+                                var snipe_point = dir * target_pos.magnitude;
+                                var err = (snipe_point - target_pos).magnitude;
+                                Logger.info($"  err={err}");
+                                if (err < 1.0)
+                                {
+                                    //ある程度正確なら登録
+                                    dot_list.Add(pc, err);
+
+                                }
                             }
                         }
                     }
                     if (dot_list.Count() != 0)
                     {
-                        //内積が一番大きい=一番正確な対象がターゲット
-                        var snipedTarget = dot_list.OrderBy(c => c.Value).Last().Key;
-                        PlayerState.setDeathReason(__instance.PlayerId, PlayerState.DeathReason.Sniper);
+                        //一番正確な対象がターゲット
+                        var snipedTarget = dot_list.OrderBy(c => c.Value).First().Key;
+                        PlayerState.setDeathReason(snipedTarget.PlayerId, PlayerState.DeathReason.Sniper);
                         snipedTarget.RpcMurderPlayer(snipedTarget);
                         RPC.PlaySoundRPC(__instance.PlayerId, Sounds.KillSound);
                     }

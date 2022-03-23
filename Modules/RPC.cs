@@ -95,6 +95,7 @@ namespace TownOfHost
                     int BountyFailureKillCooldown = reader.ReadInt32();
                     int BHDefaultKillCooldown = reader.ReadInt32();
                     int ShapeMasterShapeshiftDuration = reader.ReadInt32();
+                    int SniperBuulletCount = reader.ReadInt32();
                     RPC.SyncCustomSettings(
                         Options.roleCounts,
                         IsHideAndSeek,
@@ -124,6 +125,7 @@ namespace TownOfHost
                         BountyFailureKillCooldown,
                         BHDefaultKillCooldown,
                         ShapeMasterShapeshiftDuration,
+                        SniperBuulletCount,
                         SyncButtonMode,
                         SyncedButtonCount,
                         whenSkipVote,
@@ -222,6 +224,7 @@ namespace TownOfHost
                 int BountyFailureKillCooldown,
                 int BHDefaultKillCooldown,
                 int ShapeMasterShapeshiftDuration,
+                int SniperBuulletCount,
                 bool SyncButtonMode,
                 int SyncedButtonCount,
                 int whenSkipVote,
@@ -279,6 +282,7 @@ namespace TownOfHost
             Options.BountyFailureKillCooldown = BountyFailureKillCooldown;
             Options.BHDefaultKillCooldown = BHDefaultKillCooldown;
             Options.ShapeMasterShapeshiftDuration = ShapeMasterShapeshiftDuration;
+            Options.SniperBulletCount = SniperBuulletCount;
 
             Options.SyncButtonMode = SyncButtonMode;
             Options.SyncedButtonCount = SyncedButtonCount;
@@ -352,6 +356,7 @@ namespace TownOfHost
             writer.Write(Options.BountyFailureKillCooldown);
             writer.Write(Options.BHDefaultKillCooldown);
             writer.Write(Options.ShapeMasterShapeshiftDuration);
+            writer.Write(Options.SniperBulletCount);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
         }
         public static void PlaySoundRPC(byte PlayerID, Sounds sound)
