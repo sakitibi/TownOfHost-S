@@ -289,6 +289,17 @@ namespace TownOfHost
             IntroTypes introType = role.getIntroType();
             switch (introType)
             {
+                case IntroTypes.Impostor:
+                    if (player.isLastImpostor())
+                    {
+                        if (Options.LastImpostorKillCooldown.GetFloat() > 0)
+                        {
+                            opt.KillCooldown = Options.LastImpostorKillCooldown.GetFloat();
+                        }
+                        else
+                            opt.KillCooldown = 0.01f;
+                    }
+                    break;
                 case IntroTypes.Madmate:
                     if (Options.MadmateHasImpostorVision.GetBool())
                     {
