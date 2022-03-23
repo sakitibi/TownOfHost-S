@@ -100,6 +100,8 @@ namespace TownOfHost
                     int BountyFailureKillCooldown = reader.ReadInt32();
                     int BHDefaultKillCooldown = reader.ReadInt32();
                     int ShapeMasterShapeshiftDuration = reader.ReadInt32();
+                    bool EnableLastImpostor = reader.ReadBoolean();
+                    int LastImpostorKillCooldown = reader.ReadInt32();
                     bool AutoDisplayLastResult = reader.ReadBoolean();
                     RPC.SyncCustomSettings(
                         Options.roleCounts,
@@ -130,6 +132,8 @@ namespace TownOfHost
                         BountyFailureKillCooldown,
                         BHDefaultKillCooldown,
                         ShapeMasterShapeshiftDuration,
+                        EnableLastImpostor,
+                        LastImpostorKillCooldown,
                         SyncButtonMode,
                         SyncedButtonCount,
                         whenSkipVote,
@@ -234,6 +238,8 @@ namespace TownOfHost
                 int BountyFailureKillCooldown,
                 int BHDefaultKillCooldown,
                 int ShapeMasterShapeshiftDuration,
+                bool EnableLastImpostor,
+                int LastImpostorKillCooldown,
                 bool SyncButtonMode,
                 int SyncedButtonCount,
                 int whenSkipVote,
@@ -298,6 +304,8 @@ namespace TownOfHost
             Options.BountyFailureKillCooldown.UpdateSelection(BountyFailureKillCooldown);
             Options.BHDefaultKillCooldown.UpdateSelection(BHDefaultKillCooldown);
             Options.ShapeMasterShapeshiftDuration.UpdateSelection(ShapeMasterShapeshiftDuration);
+            Options.EnableLastImpostor.UpdateSelection(EnableLastImpostor);
+            Options.LastImpostorKillCooldown.UpdateSelection(LastImpostorKillCooldown);
 
             Options.SyncButtonMode.UpdateSelection(SyncButtonMode);
             Options.SyncedButtonCount.UpdateSelection(SyncedButtonCount);
@@ -325,7 +333,7 @@ namespace TownOfHost
             Options.MadSnitchTasks.UpdateSelection(MadSnitchTasks);
 
             Options.MayorAdditionalVote.UpdateSelection(MayorAdditionalVote);
-            
+
             Options.AutoDisplayLastResult.UpdateSelection(AutoDisplayLastResult);
         }
         //SyncCustomSettingsRPC Sender
@@ -383,6 +391,8 @@ namespace TownOfHost
             writer.Write(Options.BountyFailureKillCooldown.GetSelection());
             writer.Write(Options.BHDefaultKillCooldown.GetSelection());
             writer.Write(Options.ShapeMasterShapeshiftDuration.GetSelection());
+            writer.Write(Options.EnableLastImpostor.GetBool());
+            writer.Write(Options.LastImpostorKillCooldown.GetSelection());
             writer.Write(Options.AutoDisplayLastResult.GetBool());
             AmongUsClient.Instance.FinishRpcImmediately(writer);
         }
