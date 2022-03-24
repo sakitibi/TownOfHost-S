@@ -100,6 +100,7 @@ namespace TownOfHost
             {CustomRoles.ShapeMaster, RoleTypes.Shapeshifter},
             {CustomRoles.Madmate, RoleTypes.Engineer},
             {CustomRoles.Terrorist, RoleTypes.Engineer},
+            {CustomRoles.MineHunter, RoleTypes.Shapeshifter},
         };
         public static bool Prefix(TaskAddButton __instance)
         {

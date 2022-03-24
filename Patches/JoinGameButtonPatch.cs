@@ -52,4 +52,32 @@ namespace TownOfHost
             }
         }
     }
+    [HarmonyPatch(typeof(AbilityButton), nameof(AbilityButton.DoClick))]
+
+    class AbilityButtonDoClickPatch
+    {
+
+        static void Prefix(AbilityButton __instance)
+        {
+            if (true)//押した人の役職がxxだった場合～
+            {
+                Logger.SendInGame("変身のメニュー画面開く時にログ流れる");
+
+            }
+            else
+            {
+                Logger.SendInGame("それ以外");
+            }
+        }
+        public static void Postfix(AbilityButton __instance)
+        {
+            if (CustomRoles.MineHunter.isEnable())
+            {
+                //変身する人を選ぶ画面のキャンセル
+                //変身クールダウンのリセット[メモ：opt.RoleOptions.ShapeshifterCooldown = 0;]
+                //地雷の設置。
+                //非同期で爆弾の座標にいるクルーをキルする処理
+            }
+        }
+    }
 }
